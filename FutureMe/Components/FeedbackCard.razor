@@ -1,0 +1,23 @@
+﻿<MudCard Style="width: 60ch; padding: 2ch; margin: 0 auto;">
+    <div class="header" style="display: flex">
+        <MudAvatar Color="Color.Primary">@FirstLetter</MudAvatar>
+        <MudText Typo="Typo.subtitle1" Style="margin-left: 1ch;">@Username</MudText>
+    </div>
+    <div class="content" style="margin: 1ch 0;">
+        <MudText Typo="Typo.body1">@Feedback</MudText>
+        <MudText Typo="Typo.caption">@PostTime.ToLocalTime()</MudText>
+    </div>
+    <hr/>
+    <MudIconButton Icon="@Icons.Material.Outlined.Favorite"/>
+</MudCard>
+
+@code {
+    [Parameter]
+    public string Username { get; set; }
+    [Parameter]
+    public string Feedback { get; set; }
+    [Parameter]
+    public DateTime PostTime { get; set; } = DateTime.Now;
+
+    string FirstLetter => Username[0].ToString().ToUpper();
+}

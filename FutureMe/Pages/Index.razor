@@ -1,62 +1,67 @@
 ﻿@page "/"
 
-<div>
-    <div class="d-flex justify-content-center">
-        <div>
-            <MudText Typo="Typo.h3">Viết một lá thư tới tương lai</MudText>
-            <MudText Typo="Typo.body1" style="max-width: 72ch; margin-top: 4ch;">
-                "I love this. I've sent myself 5 letters so far and every year it's a surprise. Because I forget so easily. It turns into such a deep reflective process, that I usually weep and laugh while I write."
-            </MudText>
-            <div style="display: flex; margin-top: 1ch;">
-                <MudText Typo="Typo.subtitle1">-</MudText>
-                <div style="margin-left: 0.3ch;">
-                    <MudText Typo="Typo.subtitle1"><i>Magaret</i></MudText>
-                    <MudText Typo="Typo.subtitle2"><i>Member since 2011</i></MudText>
+<div style="background: #7467EF; color: #ffffff">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <div class="d-flex justify-content-center">
+            <div>
+                <MudText Typo="Typo.h3">Viết một lá thư tới tương lai</MudText>
+                <MudText Typo="Typo.body1" style="max-width: 72ch; margin-top: 4ch;">
+                    "I love this. I've sent myself 5 letters so far and every year it's a surprise. Because I forget so easily. It turns into such a deep reflective process, that I usually weep and laugh while I write."
+                </MudText>
+                <div style="display: flex; margin-top: 1ch;">
+                    <MudText Typo="Typo.subtitle1">-</MudText>
+                    <div style="margin-left: 0.3ch;">
+                        <MudText Typo="Typo.subtitle1"><i>Magaret</i></MudText>
+                        <MudText Typo="Typo.subtitle2"><i>Member since 2011</i></MudText>
+                    </div>
                 </div>
-            </div>
-            <MudText Style="margin-top: 2.5ch;" Typo="Typo.body1" Align="Align.Center"><b>HƠN 10 TRIỆU BỨC THƯ ĐƯỢC GỬI ĐẾN TƯƠNG LAI TỪ 2002</b></MudText>
-        </div>
-    </div>
-    <div style="max-width: 50ch; margin: 0 auto;">
-        <hr />
-    </div>
-    <div class="d-flex justify-content-center">
-        <div>
-            <div class="d-flex" style="margin-left: 3.5ch; margin-top: 5ch;">
-                <div class="d-flex align-items-center">
-                    <MudIcon Icon="@Icons.Material.Filled.Edit" Style="margin-right: 0.5ch;" />
-                </div>
-                <div class="d-flex align-items-center">
-                    <MudText Typo="Typo.h6"><MudLink Typo="Typo.h6" Href="#">Viết</MudLink> một bức thư tới bạn tương lai!</MudText>
-                </div>
-            </div>
-            <div class="d-flex" style="margin-top: 5ch;">
-                <div class="d-flex align-items-center">
-                    <MudIcon Icon="@Icons.Material.Filled.Book" Style="margin-right: 0.5ch;" />
-                </div>
-                <div class="d-flex align-items-center">
-                    <MudText Typo="Typo.h6"><MudLink Typo="Typo.h6" Href="#">Đọc</MudLink> những bức thư tương lai công khai của mọi người</MudText>
-                </div>
-            </div>
-            <div class="d-flex" style="margin-left: 3.5ch; margin-top: 5ch;">
-                <div class="d-flex align-items-center">
-                    <MudIcon Icon="@Icons.Material.Filled.Lightbulb" Style="margin-right: 0.5ch;" />
-                </div>
-                <div class="d-flex align-items-center">
-                    <MudText Typo="Typo.h6"><MudLink Typo="Typo.h6" Href="#">Tìm hiểu</MudLink> thêm về FutureMe</MudText>
-                </div>
-            </div>
-            <div class="d-flex" style="margin: 5ch 0;">
-                <div class="d-flex align-items-center">
-                    <MudIcon Icon="@Icons.Material.Filled.Favorite" Style="margin-right: 0.5ch;" />
-                </div>
-                <div class="d-flex align-items-center">
-                    <MudText Typo="Typo.h6"><MudLink Typo="Typo.h6" Href="#">Ủng hộ</MudLink> FutureMe!</MudText>
-                </div>
+                <MudText Style="margin-top: 2.5ch;" Typo="Typo.body1" Align="Align.Center"><b>HƠN 10 TRIỆU BỨC THƯ ĐƯỢC GỬI ĐẾN TƯƠNG LAI TỪ 2002</b></MudText>
             </div>
         </div>
-    </div>
-    <div style="max-width: 50ch; margin: 0 auto;">
-        <hr />
-    </div>
+        <div style="max-width: 50ch; margin: 5ch auto;">
+            <MudDivider DividerType="DividerType.Middle" />
+        </div>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div class="d-flex" style="margin-left: 3.5ch">
+                    <div class="d-flex align-items-center">
+                        <MudIcon Icon="@Icons.Material.Filled.Edit" Style="margin-right: 0.5ch; color: yellow" />
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <MudText Typo="Typo.h6"><MudLink Color="Color.Warning" Typo="Typo.h6" Href="#">Viết</MudLink> một bức thư tới bạn tương lai!</MudText>
+                    </div>
+                </div>
+                <div class="d-flex" style="margin-top: 5ch;">
+                    <div class="d-flex align-items-center">
+                        <MudIcon Icon="@Icons.Material.Filled.Book" Style="margin-right: 0.5ch;" />
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <MudText Typo="Typo.h6"><MudLink Color="Color.Secondary" Typo="Typo.h6" Href="#">Đọc</MudLink> những bức thư tương lai công khai của mọi người</MudText>
+                    </div>
+                </div>
+                <div class="d-flex" style="margin-left: 3.5ch; margin-top: 5ch;">
+                    <div class="d-flex align-items-center">
+                        <MudIcon Icon="@Icons.Material.Filled.Lightbulb" Style="margin-right: 0.5ch; color: yellow" />
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <MudText Typo="Typo.h6"><MudLink Color="Color.Warning" Typo="Typo.h6" Href="#">Tìm hiểu</MudLink> thêm về FutureMe</MudText>
+                    </div>
+                </div>
+                <div class="d-flex" style="margin-top: 5ch;">
+                    <div class="d-flex align-items-center">
+                        <MudIcon Icon="@Icons.Material.Filled.Favorite" Style="margin-right: 0.5ch;" />
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <MudText Typo="Typo.h6"><MudLink Color="Color.Secondary" Typo="Typo.h6" Href="#">Ủng hộ</MudLink> FutureMe!</MudText>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="max-width: 50ch; margin: 5ch auto;">
+            <MudDivider DividerType="DividerType.Middle"/>
+        </div>
+        <div style="padding-bottom: 5ch;">
+           <FeedbackCard Username="Hieu Le" Feedback="This is the best app I've ever seen skrrt skrrt yeah"/>
+        </div>
+    </MudContainer>
 </div>
