@@ -1,0 +1,35 @@
+﻿@page "/read-letters"
+
+<header style="background: #f0f0f0; padding: 5ch 20ch;">
+    <MudText Typo="Typo.h4" Color="Color.Primary">
+        Những bức thư du hành<br/>Từ quá khứ đến hiện tại
+    </MudText>
+</header>
+<MudContainer MaxWidth="MaxWidth.Large">
+    <ul style="list-style: none;">
+        @foreach (var letter in letters)
+        {
+            <li style="margin: 5ch 0;">
+                <LetterCard LetterItem="letter" />
+            </li>
+        }
+    </ul>
+</MudContainer>
+
+@code {
+    const string lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui dicta minus molestiae vel beatae natus eveniet ratione temporibus aperiam harum alias officiis assumenda officia quibusdam deleniti eos cupiditate dolore doloribus!";
+    List<Letter> letters = new();
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            letters.Add(new()
+            {
+                Content = lorem + lorem + lorem + lorem + lorem,
+                DeliverDate = DateTime.Now,
+                Privacy = PrivacyMode.Public
+            });
+        }
+    }
+}

@@ -1,0 +1,15 @@
+﻿.letter-card {
+    padding: 5ch;
+    cursor: pointer;
+    max-height: 35ch;
+}
+
+    .letter-card:hover {
+        outline: 2px solid rgba(89, 74, 226,0.4);
+        box-shadow: 6px 0px rgb(116 103 239 / 20%);
+    }
+
+
+.content {
+    font-family: noto-serif, source-serif-4-display, georgia, times, serif;
+}

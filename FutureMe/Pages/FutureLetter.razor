@@ -43,6 +43,7 @@
             <MudCardActions>
                 <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Secondary" ButtonType="ButtonType.Submit">Gửi tới tương lai!</MudButton>
             </MudCardActions>
+            <MudText Typo="Typo.body2">Bạn sẽ nhận được một email để xác thực email của bạn!</MudText>
         </EditForm>
     </MudCard>
 </MudContainer>
@@ -55,6 +56,19 @@
     protected override void OnInitialized()
     {
         SetDeliverDate(YearsDelivery);
+    }
+
+    bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private int WordCount(string text)
@@ -88,6 +102,14 @@
 
     private void ValidSubmit()
     {
-        Snackbar.Add("Successfully submitted", Severity.Success);
+        if (IsValidEmail(NewFutureLetter.Email))
+        {
+            Snackbar.Add("Gửi thư thành công! Hãy xác thực email của bạn", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Địa chỉ email của bạn không hợp lệ", Severity.Error);
+        }
+
     }
 }
