@@ -61,7 +61,11 @@
             <MudDivider DividerType="DividerType.Middle"/>
         </div>
         <div style="padding-bottom: 5ch;">
-           <FeedbackCard Username="Hieu Le" Feedback="This is the best app I've ever seen skrrt skrrt yeah"/>
+           <FeedbackCard @bind-FeedbackItem="feedback"/>
         </div>
     </MudContainer>
 </div>
+
+@code {
+    Feedback feedback = new() { Username = "Hieu Le", Content = "This is the best app I've ever seen skrrt skrrt yeah" };
+}

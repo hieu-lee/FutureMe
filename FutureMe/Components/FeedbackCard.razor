@@ -1,23 +1,53 @@
 ﻿<MudCard Style="width: 60ch; padding: 2ch; margin: 0 auto;">
     <div class="header" style="display: flex">
         <MudAvatar Color="Color.Primary">@FirstLetter</MudAvatar>
-        <MudText Typo="Typo.subtitle1" Style="margin-left: 1ch;">@Username</MudText>
+        <MudText Typo="Typo.subtitle1" Style="margin-left: 1ch;">@FeedbackItem.Username</MudText>
     </div>
     <div class="content" style="margin: 1ch 0;">
-        <MudText Typo="Typo.body1">@Feedback</MudText>
-        <MudText Typo="Typo.caption">@PostTime.ToLocalTime()</MudText>
+        <MudText Typo="Typo.body1">@FeedbackItem.Content</MudText>
+        <MudText Typo="Typo.caption">@FeedbackItem.PostTime.ToLocalTime()</MudText>
     </div>
     <hr/>
-    <MudIconButton Icon="@Icons.Material.Outlined.Favorite"/>
+    <div class="likes d-flex">
+        <MudIconButton Icon="@LikeIcon" @onclick="LikesChanged"/>
+        <div class="d-flex align-items-center">
+            <MudText Style="margin-left: 0.5ch;" Typo="Typo.subtitle2">@FeedbackItem.Likes</MudText>
+        </div>
+    </div>
 </MudCard>
 
 @code {
     [Parameter]
-    public string Username { get; set; }
-    [Parameter]
-    public string Feedback { get; set; }
-    [Parameter]
-    public DateTime PostTime { get; set; } = DateTime.Now;
+    public Feedback FeedbackItem
+    {
+        get => _FeedbackItem;
+        set
+        {
+            if (_FeedbackItem == value) return;
+            _FeedbackItem = value;
+            FeedbackItemChanged.InvokeAsync(value);
+        }
+    }
 
-    string FirstLetter => Username[0].ToString().ToUpper();
+    [Parameter]
+    public EventCallback<Feedback> FeedbackItemChanged { get; set; }
+    [Parameter]
+    public bool Liked { get; set; } = false;
+
+    Feedback _FeedbackItem;
+    string FirstLetter => FeedbackItem.Username[0].ToString().ToUpper();
+    string LikeIcon => (Liked) ? Icons.Material.Filled.Favorite : Icons.Material.Filled.FavoriteBorder;
+
+    private void LikesChanged()
+    {
+        if (!Liked)
+        {
+            FeedbackItem.Likes++;
+        }
+        else
+        {
+            FeedbackItem.Likes--;
+        }
+        Liked = !Liked;
+    }
 }
