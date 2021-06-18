@@ -2,7 +2,7 @@
 @inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.Large">
-    <MudCard Style="max-width: 65ch; margin: 3ch 0; padding: 3ch;">
+    <MudCard Style="max-width: 65ch; margin: 3ch auto; padding: 3ch; border-top: 10px solid #594AE2">
         <EditForm Model="NewFutureLetter" OnValidSubmit="ValidSubmit">
             <DataAnnotationsValidator />
             <MudText Typo="Typo.h5">A letter from @DateTime.Now.ToLongDateString()</MudText>
@@ -39,7 +39,7 @@
                 <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Public; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Public)?Variant.Filled:Variant.Outlined">Hoàn toàn công khai</MudChip>
             </div>
             <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐỊA CHỈ EMAIL</MudText>
-            <MudTextField Style="margin: 1ch 0;" @bind-Value="NewFutureLetter.Email" Required="true" Placeholder="Email của bạn" />
+            <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MailOutline" Style="margin: 1ch 0;" @bind-Value="NewFutureLetter.Email" Required="true" Placeholder="Email của bạn" />
             <MudCardActions>
                 <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Secondary" ButtonType="ButtonType.Submit">Gửi tới tương lai!</MudButton>
             </MudCardActions>
