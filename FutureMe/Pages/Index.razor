@@ -58,14 +58,62 @@
             </div>
         </div>
         <div style="max-width: 50ch; margin: 5ch auto;">
-            <MudDivider DividerType="DividerType.Middle"/>
+            <MudDivider DividerType="DividerType.Middle" />
+        </div>
+        <div>
+            @for (int i = 0; i < feedbacks.Count; i++)
+            {
+                <div style="margin: 3ch 0;">
+                    <FeedbackCard @bind-FeedbackItem="feedbacks[i]" />
+                </div>
+            }
+            <div class="d-flex justify-content-center">
+                <MudButton Style="background: #ffffff; color: #7467EF; margin: 0 auto;">Read more feedbacks from users</MudButton>
+            </div>
+        </div>
+        <div style="max-width: 50ch; margin: 5ch auto;">
+            <MudDivider DividerType="DividerType.Middle" />
         </div>
         <div style="padding-bottom: 5ch;">
-           <FeedbackCard @bind-FeedbackItem="feedback"/>
+            <div class="d-flex justify-content-center">
+                <MudTooltip Text="Write Letter">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Style="margin-right: 2ch; color: white" />
+                </MudTooltip>
+                <MudTooltip Text="Read Letters">
+                    <MudIconButton Icon="@Icons.Material.Filled.LocalLibrary" Style="color: white;" />
+                </MudTooltip>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                <a href="#" style="text-decoration-color: white;"><MudText Style="color: white;">Sign Up / Sign In</MudText></a>
+            </div>
         </div>
     </MudContainer>
+    <footer>
+        <ul class="copyright">
+            <li>
+                <a rel="noopener" href="https://dotnet.microsoft.com/learn/aspnet/what-is-aspnet-core" target="_blank">Powered by .NET 5</a>
+            </li>
+            <li>
+                <a rel="noopener" href="https://hieu-lee.github.io/portfolio/" target="_blank">Contact hieu-lee</a>
+            </li>
+            <li>
+                <a rel="noopener" href="https://malicexx.github.io/" target="_blank">Contact MaliceXX</a>
+            </li>
+            <li style="color: black;">
+                © hieu-lee & MaliceXX
+            </li>
+        </ul>
+    </footer>
 </div>
 
 @code {
-    Feedback feedback = new() { Username = "Hieu Le", Content = "This is the best app I've ever seen skrrt skrrt yeah" };
+    List<Feedback> feedbacks = new();
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            feedbacks.Add(new() { Username = "Hieu Le", Content = "This is the best letter writing app I've ever seen" });
+        }
+    }
 }
