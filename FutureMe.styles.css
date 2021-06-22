@@ -1,0 +1,112 @@
+/* /Components/LetterCard.razor.rz.scp.css */
+.letter-card[b-71uw6j3csx] {
+    padding: 5ch;
+    cursor: pointer;
+}
+
+.content[b-71uw6j3csx] {
+    font-family: noto-serif, source-serif-4-display, georgia, times, serif;
+}
+/* /Pages/Index.razor.rz.scp.css */
+footer[b-mbytkhteaq] {
+    background: #F0F0F0;
+    padding: 5ch 15ch;
+}
+
+    footer a[b-mbytkhteaq] {
+        text-decoration: none;
+        color: #616161;
+        transition: color 0.3s;
+    }
+
+        footer a:hover[b-mbytkhteaq] {
+            text-decoration: underline;
+            color: #181818
+        }
+
+    footer .copyright[b-mbytkhteaq] {
+        display: flex;
+        justify-content: space-around;
+    }
+/* /Pages/PublicLetters.razor.rz.scp.css */
+/*.letter-card-holder {
+    margin-bottom: 5ch;
+}*/
+
+.letter-card-holder:hover[b-vtyytl20g4] {
+    outline: 2px solid rgba(89, 74, 226,0.4);
+    box-shadow: 6px 0px rgb(116 103 239 / 20%);
+}
+/* /Pages/ViewLetter.razor.rz.scp.css */
+.content[b-ix4gca4dvx] {
+    font-family: noto-serif, source-serif-4-display, georgia, times, serif;
+}
+/* /Shared/MainLayout.razor.rz.scp.css */
+.mudblazor-logo[b-lq71q7k36c] {
+    width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* /Shared/NavMenu.razor.rz.scp.css */
+.navbar-toggler[b-1y1eqls9q7] {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.top-row[b-1y1eqls9q7] {
+    height: 3.5rem;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.navbar-brand[b-1y1eqls9q7] {
+    font-size: 1.1rem;
+}
+
+.oi[b-1y1eqls9q7] {
+    width: 2rem;
+    font-size: 1.1rem;
+    vertical-align: text-top;
+    top: -2px;
+}
+
+.nav-item[b-1y1eqls9q7] {
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+}
+
+    .nav-item:first-of-type[b-1y1eqls9q7] {
+        padding-top: 1rem;
+    }
+
+    .nav-item:last-of-type[b-1y1eqls9q7] {
+        padding-bottom: 1rem;
+    }
+
+    .nav-item[b-1y1eqls9q7]  a {
+        color: #d7d7d7;
+        border-radius: 4px;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        line-height: 3rem;
+    }
+
+        .nav-item[b-1y1eqls9q7]  a.active {
+            background-color: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        .nav-item[b-1y1eqls9q7]  a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+@media (min-width: 641px) {
+    .navbar-toggler[b-1y1eqls9q7] {
+        display: none;
+    }
+
+    .collapse[b-1y1eqls9q7] {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+    }
+}
