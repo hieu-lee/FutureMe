@@ -97,7 +97,7 @@
       "url": "_framework\/dotnet.5.0.7.js"
     },
     {
-      "hash": "sha256-HHjH9n+2AKFj0ZG9BEvDXmuhJXVTuLVHRtlAulxxqz8=",
+      "hash": "sha256-MTK5N1HtfO+ouvkiA7ne2HBFJ6K+sfweIdAQYJ4BHOE=",
       "url": "FutureMe.styles.css"
     },
     {
@@ -177,7 +177,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-KGL+UzLUMbN3rDpLi66KCQG5U38jTF5GyqdnlA2AD\/8=",
+      "hash": "sha256-rnB1JRTDBMPHMGE9J85pcb9R7eKQ2mP2Q790KDjIVWQ=",
       "url": "_framework\/FutureMe.dll"
     },
     {
@@ -293,7 +293,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-2GfvmoHSJMLi1Y9LGIFRhT6XSsQR9Mg2wukmjwPRv5Y=",
+      "hash": "sha256-lS6b3YV0ziUNl1JirKvXVGGs2HrHbaOmYclxNLnsKZQ=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -301,5 +301,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "MFd+Ci+j"
+  "version": "sg+JzkKJ"
 };
