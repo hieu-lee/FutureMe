@@ -11,7 +11,14 @@
             {
                 <div style="background: #F5F4FD; padding: 2ch; border-radius: 5px; margin: 2ch 0">
                     <MudText Color="Color.Primary">Bạn có @TravelingLetters.Count bức thư đã gửi tới tương lai và đang chờ đón bạn</MudText>
-                    <MudText Color="Color.Primary" Typo="Typo.caption">Chúng tôi giấu thông tin về những bức thư trong tương lai để bảo toàn sự bất ngờ cho bạn. Nếu bạn muốn thay đổi địa chỉ email hoặc xóa 1 bức thư, <span style="text-decoration: underline; cursor: pointer;">hiển thị những bức thư tương lai</span></MudText>
+                    @if (!ShowFuture)
+                    {
+                        <MudText Color="Color.Primary" Typo="Typo.caption">Chúng tôi giấu thông tin về những bức thư trong tương lai để bảo toàn sự bất ngờ cho bạn. Nếu bạn muốn thay đổi địa chỉ email hoặc xóa 1 bức thư, <span @onclick="() => { ShowFuture = !ShowFuture; }" style="text-decoration: underline; cursor: pointer;">hiển thị những bức thư tương lai</span></MudText>
+                    }
+                    else
+                    {
+                        <MudText Color="Color.Primary" Typo="Typo.caption">Lắng nghe những bức thư đang du hành đến tương lai của bạn. Bạn có thể cập nhật địa chỉ email nhận thư hoặc <span @onclick="() => { ShowFuture = !ShowFuture; }" style="text-decoration: underline; cursor: pointer;">giấu những bức thư tương lai</span></MudText>
+                    }
                 </div>
             }
             else
@@ -39,4 +46,5 @@
 @code {
     HashSet<Letter> TravelingLetters = new();
     HashSet<Letter> DeliveredLetters = new();
+    bool ShowFuture = false;
 }

@@ -24,7 +24,7 @@
                 </div>
                 <hr />
                 <MudTextField Required="true" Placeholder="Gửi tôi trong tương lai" @bind-Value="NewFutureLetter.Content" For="@(() => NewFutureLetter.Content)" Lines="10" />
-                <MudText Typo="Typo.caption">@WordCount(NewFutureLetter.Content) word(s)</MudText>
+                <MudText Typo="Typo.caption">@NewFutureLetter.WordCount() word(s)</MudText>
                 <br />
                 @if (!ExactDateMode)
                 {
@@ -87,29 +87,6 @@
         {
             return false;
         }
-    }
-
-    private int WordCount(string text)
-    {
-        int wordCount = 0, index = 0;
-
-        // skip whitespace until first word
-        while (index < text.Length && char.IsWhiteSpace(text[index]))
-            index++;
-
-        while (index < text.Length)
-        {
-            // check if current char is part of a word
-            while (index < text.Length && !char.IsWhiteSpace(text[index]))
-                index++;
-
-            wordCount++;
-
-            // skip whitespace until next word
-            while (index < text.Length && char.IsWhiteSpace(text[index]))
-                index++;
-        }
-        return wordCount;
     }
 
     private void SetDeliverDate(int i)

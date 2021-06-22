@@ -21,5 +21,28 @@ namespace FutureMe.Models
         public PrivacyMode Privacy { get; set; } = 0;
         public DateTime DateCreate { get; init; } = DateTime.Now.Date;
         public int Likes { get; set; } = 0;
+        public int WordCount()
+        {
+            string text = Content;
+            int wordCount = 0, index = 0;
+
+            // skip whitespace until first word
+            while (index < text.Length && char.IsWhiteSpace(text[index]))
+                index++;
+
+            while (index < text.Length)
+            {
+                // check if current char is part of a word
+                while (index < text.Length && !char.IsWhiteSpace(text[index]))
+                    index++;
+
+                wordCount++;
+
+                // skip whitespace until next word
+                while (index < text.Length && char.IsWhiteSpace(text[index]))
+                    index++;
+            }
+            return wordCount;
+        }
     }
 }
