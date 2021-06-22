@@ -8,11 +8,14 @@ namespace FutureMe.Models
 {
     public class Letter
     {
-        [Required]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        [Required(ErrorMessage = "Bạn cần phải nhập tiêu đề")]
+        public string Title { get; set; }
+        [Required(ErrorMessage = "Bạn cần phải nhập nội dung thư")]
         public string Content { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Bạn cần phải nhập email")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Bạn cần phải nhập ngày gửi thư")]
         public DateTime? DeliverDate { get; set; }
         [Required]
         public PrivacyMode Privacy { get; set; } = 0;

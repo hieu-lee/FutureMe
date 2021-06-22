@@ -11,7 +11,7 @@ namespace FutureMe.Models
         [Required(ErrorMessage = "Bạn cần nhập email")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Bạn cần nhập mật khẩu")]
-        [StringLength(15, ErrorMessage = "Your password must have length between 6 and 15", MinimumLength = 6)]
+        [StringLength(15, ErrorMessage = "Mật khẩu của bạn phải có độ dài trong khoảng 6 đến 15 chữ cái", MinimumLength = 6)]
         public string Password { get; set; }
         public string Username { get; set; }
     }

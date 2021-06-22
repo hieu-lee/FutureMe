@@ -5,51 +5,69 @@
     <MudCard Style="max-width: 65ch; margin: 3ch auto; padding: 3ch; border-top: 10px solid #594AE2">
         <EditForm Model="NewFutureLetter" OnValidSubmit="ValidSubmit">
             <DataAnnotationsValidator />
-            <MudText Typo="Typo.h5">A letter from @DateTime.Now.ToLongDateString()</MudText>
-            <hr />
-            <MudTextField Required="true" Placeholder="Gửi tôi trong tương lai" @bind-Value="NewFutureLetter.Content" For="@(() => NewFutureLetter.Content)" Lines="10" />
-            <MudText Typo="Typo.caption">@WordCount(NewFutureLetter.Content) word(s)</MudText>
-            <br />
-            @if (!ExactDateMode)
-            {
-                <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">GỬI TỚI TÔI TRONG</MudText>
-                <div>
-                    <MudChip Size="Size.Small" @onclick="() => { SetDeliverDate(1); }" Style="cursor: pointer" Color="Color.Primary" Variant="(YearsDelivery == 1)?Variant.Filled:Variant.Outlined">1 năm</MudChip>
-                    <MudChip Size="Size.Small" @onclick="() => { SetDeliverDate(3); }" Style="cursor: pointer" Color="Color.Primary" Variant="(YearsDelivery == 3)?Variant.Filled:Variant.Outlined">3 năm</MudChip>
-                    <MudChip Size="Size.Small" @onclick="() => { SetDeliverDate(5); }" Style="cursor: pointer" Color="Color.Primary" Variant="(YearsDelivery == 5)?Variant.Filled:Variant.Outlined">5 năm</MudChip>
-                    <MudText @onclick="() => { ExactDateMode = true; }" Color="Color.Primary" Typo="Typo.caption" Style="cursor: pointer">Chọn ngày cụ thể</MudText>
+                <div class="d-flex justify-content-between">
+                    @if (TitleEditing)
+                    {
+                        <MudTextField Label="Tiêu đề" @bind-Value="@NewFutureLetter.Title" For="() => NewFutureLetter.Title" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center">
+                            <MudText Typo="Typo.h5">@NewFutureLetter.Title</MudText>
+                        </div>
+                    }
+                    <div class="d-flex align-items-center">
+                        <MudIconButton @onclick="() => { TitleEditing = !TitleEditing; }">
+                            <MudIcon Icon="@EditIcon" />
+                        </MudIconButton>
+                    </div>
                 </div>
-            }
-            else
-            {
-                <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">GỬI TỚI TÔI VÀO NGÀY</MudText>
-                <div class="d-flex">
+                <hr />
+                <MudTextField Required="true" Placeholder="Gửi tôi trong tương lai" @bind-Value="NewFutureLetter.Content" For="@(() => NewFutureLetter.Content)" Lines="10" />
+                <MudText Typo="Typo.caption">@WordCount(NewFutureLetter.Content) word(s)</MudText>
+                <br />
+                @if (!ExactDateMode)
+                {
+                    <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">GỬI TỚI TÔI TRONG</MudText>
                     <div>
-                        <MudDatePicker MinDate="DateTime.Today" Label="Ngày nhận thư" @bind-Date="NewFutureLetter.DeliverDate" For="@(() => NewFutureLetter.DeliverDate)" />
+                        <MudChip Size="Size.Small" @onclick="() => { SetDeliverDate(1); }" Style="cursor: pointer" Color="Color.Primary" Variant="(YearsDelivery == 1)?Variant.Filled:Variant.Outlined">1 năm</MudChip>
+                        <MudChip Size="Size.Small" @onclick="() => { SetDeliverDate(3); }" Style="cursor: pointer" Color="Color.Primary" Variant="(YearsDelivery == 3)?Variant.Filled:Variant.Outlined">3 năm</MudChip>
+                        <MudChip Size="Size.Small" @onclick="() => { SetDeliverDate(5); }" Style="cursor: pointer" Color="Color.Primary" Variant="(YearsDelivery == 5)?Variant.Filled:Variant.Outlined">5 năm</MudChip>
+                        <MudText @onclick="() => { ExactDateMode = true; }" Color="Color.Primary" Typo="Typo.caption" Style="cursor: pointer">Chọn ngày cụ thể</MudText>
                     </div>
-                    <div class="d-flex ml-4 align-items-end">
-                        <MudText @onclick="() => { ExactDateMode = false; }" Color="Color.Primary" Typo="Typo.caption" Style="cursor: pointer;">Chọn khoảng thời gian</MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">GỬI TỚI TÔI VÀO NGÀY</MudText>
+                    <div class="d-flex">
+                        <div>
+                            <MudDatePicker MinDate="DateTime.Today" Label="Ngày nhận thư" @bind-Date="NewFutureLetter.DeliverDate" For="@(() => NewFutureLetter.DeliverDate)" />
+                        </div>
+                        <div class="d-flex ml-4 align-items-end">
+                            <MudText @onclick="() => { ExactDateMode = false; }" Color="Color.Primary" Typo="Typo.caption" Style="cursor: pointer;">Chọn khoảng thời gian</MudText>
+                        </div>
                     </div>
+                }
+                <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐÂY LÀ MỘT BỨC THƯ</MudText>
+                <div>
+                    <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Private; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Private)?Variant.Filled:Variant.Outlined">Riêng tư</MudChip>
+                    <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Anonymous; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Anonymous)?Variant.Filled:Variant.Outlined">Công khai nhưng ẩn danh</MudChip>
+                    <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Public; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Public)?Variant.Filled:Variant.Outlined">Hoàn toàn công khai</MudChip>
                 </div>
-            }
-            <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐÂY LÀ MỘT BỨC THƯ</MudText>
-            <div>
-                <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Private; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Private)?Variant.Filled:Variant.Outlined">Riêng tư</MudChip>
-                <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Anonymous; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Anonymous)?Variant.Filled:Variant.Outlined">Công khai nhưng ẩn danh</MudChip>
-                <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Public; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Public)?Variant.Filled:Variant.Outlined">Hoàn toàn công khai</MudChip>
-            </div>
-            <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐỊA CHỈ EMAIL</MudText>
-            <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MailOutline" Style="margin: 1ch 0;" @bind-Value="NewFutureLetter.Email" Required="true" Placeholder="Email của bạn" />
-            <MudCardActions>
-                <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Secondary" ButtonType="ButtonType.Submit">Gửi tới tương lai!</MudButton>
-            </MudCardActions>
-            <MudText Typo="Typo.body2">Bạn sẽ nhận được một email để xác thực email của bạn!</MudText>
-        </EditForm>
+                <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐỊA CHỈ EMAIL</MudText>
+                <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MailOutline" Style="margin: 1ch 0;" @bind-Value="NewFutureLetter.Email" Required="true" Placeholder="Email của bạn" />
+                <MudCardActions>
+                    <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Secondary" ButtonType="ButtonType.Submit">Gửi tới tương lai!</MudButton>
+                </MudCardActions>
+                <MudText Typo="Typo.body2">Bạn sẽ nhận được một email để xác thực email của bạn!</MudText>
+            </EditForm>
     </MudCard>
 </MudContainer>
 
 @code {
-    Letter NewFutureLetter = new() { Content = "Gửi tôi trong tương lai,\n" };
+    Letter NewFutureLetter = new() { Title = $"Một bức thư từ {DateTime.Now.ToShortDateString()}", Content = "Gửi tôi trong tương lai,\n" };
+    bool TitleEditing = false;
+    string EditIcon => (TitleEditing) ? Icons.Material.Filled.EditOff : Icons.Material.Filled.Edit;
     int YearsDelivery = 1;
     bool ExactDateMode = false;
 
