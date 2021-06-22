@@ -1,7 +1,8 @@
 ﻿@page "/my-letters" 
+@inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.Large">
-    <div style="margin: 10ch auto; max-width: 50ch;">
+    <div style="margin: 10ch auto; max-width: 82.5ch;">
         <div>
             <div class="d-flex">
                 <MudIcon Style="margin-right: 1ch" Color="Color.Primary" Icon="@Icons.Material.Filled.AccessTime" />
@@ -20,6 +21,32 @@
                         <MudText Color="Color.Primary" Typo="Typo.caption">Lắng nghe những bức thư đang du hành đến tương lai của bạn. Bạn có thể cập nhật địa chỉ email nhận thư hoặc <span @onclick="() => { ShowFuture = !ShowFuture; }" style="text-decoration: underline; cursor: pointer;">giấu những bức thư tương lai</span></MudText>
                     }
                 </div>
+                @if (ShowFuture)
+                {
+                    <MudTable Striped="true" Style="overflow-x: scroll;" Items="@TravelingLetters" Hover="true" SortLabel="Sort By">
+                        <HeaderContent>
+                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Title)">Tiêu đề</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DateCreate)">Viết</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DeliverDate)">Gửi</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Email)">Tới</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.WordNum)">Số từ</MudTableSortLabel></MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Tiêu đề"><MudLink Href="letters">@context.Title</MudLink></MudTd>
+                            <MudTd DataLabel="Ngày viết thư">@context.DateCreate</MudTd>
+                            <MudTd DataLabel="Ngày gửi thư">@context.DeliverDate</MudTd>
+                            <MudTd DataLabel="Email nhận">@context.Email</MudTd>
+                            <MudTd DataLabel="Số từ">@context.WordNum</MudTd>
+                            <MudTd>
+                                <div class="d-flex">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Lock" />
+                                    <MudIconButton @onclick="() => { DeleteTravelingLetter(context); }" Style="margin-left: 0.5ch" Icon="@Icons.Material.Filled.Delete" />
+                                </div>
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
             }
             else
             {
@@ -28,7 +55,7 @@
                 </div>
             }
         </div>
-        <div>
+        <div style="margin-top: 3ch; padding-bottom: 10ch;">
             <div class="d-flex">
                 <MudIcon Style="margin-right: 1ch" Color="Color.Success" Icon="@Icons.Material.Filled.Check" />
                 <MudText>Đã nhận (@DeliveredLetters.Count thư)</MudText>
@@ -44,7 +71,25 @@
 </MudContainer>
 
 @code {
-    HashSet<Letter> TravelingLetters = new();
+    static string email = "hieuld@gmail.com";
+    HashSet<Letter> TravelingLetters = new()
+    {
+        new() { Title = "Lmao", DateCreate = DateTime.Now.Date, DeliverDate = DateTime.Now.Date.AddDays(5), WordNum = 10, Email = email },
+        new() { Title = "Lmao1", DateCreate = DateTime.Now.Date.AddDays(-1), DeliverDate = DateTime.Now.Date.AddDays(3), WordNum = 13, Email = email },
+        new() { Title = "Lmao2", DateCreate = DateTime.Now.Date.AddDays(-3), DeliverDate = DateTime.Now.Date.AddDays(10), WordNum = 15, Email = email }
+    };
     HashSet<Letter> DeliveredLetters = new();
     bool ShowFuture = false;
+
+    private void DeleteTravelingLetter(Letter letter)
+    {
+        TravelingLetters.Remove(letter);
+        Snackbar.Add("Xóa thành công một bức thư", Severity.Success);
+    }
+
+    private void DeleteDeliveredLetter(Letter letter)
+    {
+        DeliveredLetters.Remove(letter);
+        Snackbar.Add("Xóa thành công một bức thư", Severity.Success);
+    }
 }

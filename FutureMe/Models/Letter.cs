@@ -8,7 +8,7 @@ namespace FutureMe.Models
 {
     public class Letter
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; init; } = Guid.NewGuid().ToString();
         [Required(ErrorMessage = "Bạn cần phải nhập tiêu đề")]
         public string Title { get; set; }
         [Required(ErrorMessage = "Bạn cần phải nhập nội dung thư")]
@@ -21,6 +21,7 @@ namespace FutureMe.Models
         public PrivacyMode Privacy { get; set; } = 0;
         public DateTime DateCreate { get; init; } = DateTime.Now.Date;
         public int Likes { get; set; } = 0;
+        public int WordNum { get; set; } = 0;
         public int WordCount()
         {
             string text = Content;
@@ -42,7 +43,22 @@ namespace FutureMe.Models
                 while (index < text.Length && char.IsWhiteSpace(text[index]))
                     index++;
             }
+            if (wordCount != WordNum) 
+            {
+                WordNum = wordCount;
+            }
             return wordCount;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = (Letter)obj;
+            return Id.Equals(other.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }
