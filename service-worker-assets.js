@@ -57,7 +57,7 @@
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-Cfpl0lAm7gKEZW4rPd5K1foXzuuGcqecrsL+I8aSJuk=",
+      "hash": "sha256-PRdHgFUzMW6mjobhihoQY98GCdisZcTNjnF3iiEwoEE=",
       "url": "index.html"
     },
     {
@@ -97,7 +97,7 @@
       "url": "_framework\/dotnet.5.0.7.js"
     },
     {
-      "hash": "sha256-MTK5N1HtfO+ouvkiA7ne2HBFJ6K+sfweIdAQYJ4BHOE=",
+      "hash": "sha256-xmzRXhM0kV37CbhBzoXTrJncOVO4NeLhY\/91ck6KsRs=",
       "url": "FutureMe.styles.css"
     },
     {
@@ -297,5 +297,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "5P1pAYN3"
+  "version": "h9ZjhIwA"
 };

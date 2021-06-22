@@ -28,6 +28,19 @@ footer[b-mbytkhteaq] {
         display: flex;
         justify-content: space-around;
     }
+
+@media (max-width: 600px) {
+    footer .copyright[b-mbytkhteaq] {
+        display: block;
+        text-align: center;
+    }
+}
+
+@media (max-width: 935px) {
+    footer[b-mbytkhteaq] {
+        padding: 5ch;
+    }
+}
 /* /Pages/PublicLetters.razor.rz.scp.css */
 header[b-vtyytl20g4] {
     background: #594AE2;
