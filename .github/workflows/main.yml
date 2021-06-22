@@ -30,28 +30,33 @@ jobs:
     - name: Fix service-worker-assets.js hashes
       working-directory: release/wwwroot
       run: |
-        $JsFileContent = Get-Content -Path service-worker-assets.js -Raw
-        $Json = $JsFileContent.Replace("self.assetsManifest = ", "").Replace(";", "") | ConvertFrom-Json
-        $Assets = $Json.assets
-        foreach ($Asset in $Assets) {
-            $OldHash = $Asset.hash
-            $Path = $Asset.url
+        jsFile=$(<service-worker-assets.js)
+        # remove JavaScript from contents so it can be interpreted as JSON
+        json=$(echo "$jsFile" | sed "s/self.assetsManifest = //g" | sed "s/;//g")
+        # grab the assets JSON array
+        assets=$(echo "$json" | jq '.assets[]' -c)
+        for asset in $assets
+        do
+          oldHash=$(echo "$asset" | jq '.hash')
+          #remove leading and trailing quotes
+          oldHash="${oldHash:1:-1}"
+          path=$(echo "$asset" | jq '.url')
+          #remove leading and trailing quotes
+          path="${path:1:-1}"
+          newHash="sha256-$(openssl dgst -sha256 -binary $path | openssl base64 -A)"
+          
+          if [ $oldHash != $newHash ]; then
+            # escape slashes for json
+            oldHash=$(echo "$oldHash" | sed 's;/;\\/;g')
+            newHash=$(echo "$newHash" | sed 's;/;\\/;g')
+            echo "Updating hash for $path from $oldHash to $newHash"
+            # escape slashes second time for sed
+            oldHash=$(echo "$oldHash" | sed 's;/;\\/;g')
+            jsFile=$(echo -n "$jsFile" | sed "s;$oldHash;$newHash;g")
+          fi
+        done
 
-            $Signature = Get-FileHash -Path $Path -Algorithm SHA256
-            $SignatureBytes = [byte[]] -split ($Signature.Hash -replace '..', '0x$& ')
-            $SignatureBase64 = [System.Convert]::ToBase64String($SignatureBytes)
-            $NewHash = "sha256-$SignatureBase64"
-
-            If ($OldHash -ne $NewHash) {
-            Write-Host "Updating hash for $Path from $OldHash to $NewHash"
-            $OldHash = $OldHash.Replace("/", "\/")
-            $NewHash = $NewHash.Replace("/", "\/")
-            $JsFileContent = $JsFileContent.Replace("""$OldHash""", """$NewHash""")
-            }
-        }
-
-Set-Content -Path service-worker-assets.js -Value $JsFileContent -NoNewline 
-	         
+        echo -n "$jsFile" > service-worker-assets.js	         
     # copy index.html to 404.html to serve the same file when a file is not found
     - name: copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
