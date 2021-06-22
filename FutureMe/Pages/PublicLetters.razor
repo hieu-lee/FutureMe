@@ -11,7 +11,7 @@
         <ul style="list-style: none">
             @for (int i = 0; i < letters.Count; i++)
             {
-                <li class="letter-card-holder" @onclick="@(() => { NavManager.NavigateTo("/read-letter"); })">
+                <li class="letter-card-holder" @onclick="@(() => { NavManager.NavigateTo("read-letter"); })">
                     <LetterCard @bind-LetterItem="letters[i]" />
                 </li>
             }
