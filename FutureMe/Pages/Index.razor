@@ -78,14 +78,14 @@
         <div style="padding-bottom: 5ch;">
             <div class="d-flex justify-content-center">
                 <MudTooltip Text="Write Letter">
-                    <MudIconButton @onclick="@(() => { NavManager.NavigateTo("/letters"); })" Icon="@Icons.Material.Filled.Edit" Style="margin-right: 2ch; color: white" />
+                    <MudIconButton @onclick="@(() => { NavManager.NavigateTo("letters"); })" Icon="@Icons.Material.Filled.Edit" Style="margin-right: 2ch; color: white" />
                 </MudTooltip>
                 <MudTooltip Text="Read Letters">
-                    <MudIconButton @onclick="@(() => { NavManager.NavigateTo("/read-letters"); })" Icon="@Icons.Material.Filled.LocalLibrary" Style="color: white;" />
+                    <MudIconButton @onclick="@(() => { NavManager.NavigateTo("read-letters"); })" Icon="@Icons.Material.Filled.LocalLibrary" Style="color: white;" />
                 </MudTooltip>
             </div>
             <div class="d-flex justify-content-center mt-4">
-                <a href="#" style="text-decoration-color: white;"><MudText Style="color: white;">Sign Up / Sign In</MudText></a>
+                <a href="users/true" style="text-decoration-color: white;"><MudText Style="color: white;">Sign Up / Sign In</MudText></a>
             </div>
         </div>
     </MudContainer>
