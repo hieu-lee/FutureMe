@@ -1,6 +1,19 @@
-﻿/*.letter-card-holder {
-    margin-bottom: 5ch;
-}*/
+﻿header {
+    background: #594AE2;
+    padding: 5ch 20ch;
+}
+
+@media (max-width: 750px) {
+    header {
+        padding: 5ch;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 3ch;
+    }
+}
 
 .letter-card-holder:hover {
     outline: 2px solid rgba(89, 74, 226,0.4);
