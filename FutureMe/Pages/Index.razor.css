@@ -18,3 +18,16 @@
         display: flex;
         justify-content: space-around;
     }
+
+@media (max-width: 600px) {
+    footer .copyright {
+        display: block;
+        text-align: center;
+    }
+}
+
+@media (max-width: 935px) {
+    footer {
+        padding: 5ch;
+    }
+}
