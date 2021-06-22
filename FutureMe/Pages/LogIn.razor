@@ -1,0 +1,41 @@
+﻿@page "/users/{register:bool}"
+
+<div class="d-flex justify-content-center align-items-center" style="background: #f0f0f0">
+    <MudCard Style="padding: 3ch; border-top: 10px solid #594AE2; margin: 15ch 0;">
+        @if (register)
+        {
+            <MudText Style="margin-bottom: 1ch;" Align="Align.Center" Typo="Typo.h5">Tạo tài khoản FutureMe</MudText>
+            <EditForm Model="account">
+                <DataAnnotationsValidator />
+                <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Mail" HelperText="Bạn sẽ nhận được một email xác thực" Label="Email" @bind-Value="account.Email" For="() => account.Email" />
+                <br />
+                <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Label="Mật khẩu" @bind-Value="account.Password" For="() => account.Password" InputType="InputType.Password" />
+                <MudCardActions Style="margin-top: 1ch;">
+                    <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Tạo tài khoản</MudButton>
+                </MudCardActions>
+            </EditForm>
+            <MudText>Đã có tài khoản FutureMe? <MudLink Href="users/false">Đăng nhập</MudLink></MudText>
+        }
+        else
+        {
+            <MudText Style="margin-bottom: 1ch;" Align="Align.Center" Typo="Typo.h5">Đăng nhập vào FutureMe</MudText>
+            <EditForm Model="account">
+                <DataAnnotationsValidator />
+                <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Mail" Label="Email" @bind-Value="account.Email" For="() => account.Email" />
+                <br />
+                <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Label="Mật khẩu" @bind-Value="account.Password" For="() => account.Password" InputType="InputType.Password" />
+                <MudCardActions Style="margin-top: 1ch;">
+                    <MudButton Style="margin: 0 auto" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Đăng nhập</MudButton>
+                </MudCardActions>
+            </EditForm>
+            <MudText>Chưa có tài khoản FutureMe? <MudLink Href="users/true">Tạo tài khoản</MudLink></MudText>
+        }
+    </MudCard>
+</div>
+
+@code {
+    [Parameter]
+    public bool register { get; set; }
+
+    Account account = new();
+}
