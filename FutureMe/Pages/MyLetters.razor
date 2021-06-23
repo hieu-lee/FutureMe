@@ -27,7 +27,7 @@
                         <HeaderContent>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Title)">Tiêu đề</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DateCreate)">Ngày viết</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày gửi</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày nhận</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Email)">Tới</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.WordNum)">Số từ</MudTableSortLabel></MudTh>
                             <MudTh></MudTh>
@@ -40,7 +40,7 @@
                             <MudTd DataLabel="Số từ">@context.WordNum</MudTd>
                             <MudTd>
                                 <div class="d-flex">
-                                    <MudIconButton Icon="@Icons.Material.Filled.Lock" />
+                                    <MudIconButton @onclick="() => { PrivacyChange(context); }" Icon="@LetterPrivacyIcon(context)" />
                                     <MudIconButton @onclick="() => { DeleteTravelingLetter(context); }" Style="margin-left: 0.5ch" Icon="@Icons.Material.Filled.Delete" />
                                 </div>
                             </MudTd>
@@ -66,12 +66,77 @@
                     <MudText>Bạn chưa nhận được bức thư nào. Nhưng khi những bức thư đến, bạn sẽ thấy chúng ở đây.</MudText>
                 </div>
             }
+            else
+            {
+                <div style="background: #fafafa; padding: 2ch; border-radius: 5px; margin: 2ch 0">
+                    <MudText>Bạn đã nhận được @DeliveredLetters.Count bức thư du hàng từ quá khứ!</MudText>
+                </div>
+                <MudTable Striped="true" Style="overflow-x: scroll;" Items="@DeliveredLetters" Hover="true" SortLabel="Sort By">
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Title)">Tiêu đề</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DateCreate)">Ngày viết</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày nhận</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Email)">Tới</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.WordNum)">Số từ</MudTableSortLabel></MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Tiêu đề"><MudLink Href="letters">@context.Title</MudLink></MudTd>
+                        <MudTd DataLabel="Ngày viết">@context.DateCreate.ToShortDateString()</MudTd>
+                        <MudTd DataLabel="Ngày nhận">@context.DeliverDate.Value.ToShortDateString()</MudTd>
+                        <MudTd DataLabel="Tới">@context.Email</MudTd>
+                        <MudTd DataLabel="Số từ">@context.WordNum</MudTd>
+                        <MudTd>
+                            <div class="d-flex">
+                                <MudIconButton @onclick="() => { PrivacyChange(context); }" Icon="@LetterPrivacyIcon(context)" />
+                                <MudIconButton @onclick="() => { DeleteDeliveredLetter(context); }" Style="margin-left: 0.5ch" Icon="@Icons.Material.Filled.Delete" />
+                            </div>
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            }
         </div>
     </div>
 </MudContainer>
 
 @code {
     static string email = "hieuld@gmail.com";
+    static string[] PrivacyIcons = new string[3]
+    {
+        Icons.Material.Filled.Lock,
+        Icons.Custom.Brands.Awesome,
+        Icons.Material.Filled.Public
+    };
+
+    private string LetterPrivacyIcon(Letter letter)
+    {
+        switch(letter.Privacy)
+        {
+            case (PrivacyMode.Private):
+                return PrivacyIcons[0];
+            case (PrivacyMode.Anonymous):
+                return PrivacyIcons[1];
+            default:
+                return PrivacyIcons[2];
+        }
+    }
+
+    private void PrivacyChange(Letter letter)
+    {
+        switch (letter.Privacy)
+        {
+            case (PrivacyMode.Private):
+                letter.Privacy = PrivacyMode.Anonymous;
+                return;
+            case (PrivacyMode.Anonymous):
+                letter.Privacy = PrivacyMode.Public;
+                return;
+            default:
+                letter.Privacy = PrivacyMode.Private;
+                return;
+        }
+    }
+
     HashSet<Letter> TravelingLetters = new()
     {
         new() { Title = "Lmao", DateCreate = DateTime.Now.Date, DeliverDate = DateTime.Now.Date.AddDays(5), WordNum = 10, Email = email },
