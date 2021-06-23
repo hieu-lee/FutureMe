@@ -2,7 +2,7 @@
 @inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.Large">
-    <div style="margin: 10ch auto; max-width: 82.5ch;">
+    <div style="margin: 10ch auto; max-width: 83ch;">
         <div>
             <div class="d-flex">
                 <MudIcon Style="margin-right: 1ch" Color="Color.Primary" Icon="@Icons.Material.Filled.AccessTime" />
@@ -26,17 +26,17 @@
                     <MudTable Striped="true" Style="overflow-x: scroll;" Items="@TravelingLetters" Hover="true" SortLabel="Sort By">
                         <HeaderContent>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Title)">Tiêu đề</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DateCreate)">Viết</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DeliverDate)">Gửi</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DateCreate)">Ngày viết</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày gửi</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Email)">Tới</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.WordNum)">Số từ</MudTableSortLabel></MudTh>
                             <MudTh></MudTh>
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Tiêu đề"><MudLink Href="letters">@context.Title</MudLink></MudTd>
-                            <MudTd DataLabel="Ngày viết thư">@context.DateCreate</MudTd>
-                            <MudTd DataLabel="Ngày gửi thư">@context.DeliverDate</MudTd>
-                            <MudTd DataLabel="Email nhận">@context.Email</MudTd>
+                            <MudTd DataLabel="Ngày viết">@context.DateCreate.ToShortDateString()</MudTd>
+                            <MudTd DataLabel="Ngày nhận">@context.DeliverDate.Value.ToShortDateString()</MudTd>
+                            <MudTd DataLabel="Tới">@context.Email</MudTd>
                             <MudTd DataLabel="Số từ">@context.WordNum</MudTd>
                             <MudTd>
                                 <div class="d-flex">
