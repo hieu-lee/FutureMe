@@ -1,29 +1,9 @@
 ﻿@page "/validation/{key}"
 
-<MudContainer MaxWidth="MaxWidth.Large">
-    @if (loading)
-    {
-        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-        <MudText Typo="Typo.h4" Style="text-align: center;">Chúng tôi đang xác thực email của bạn</MudText>
-    }
-    else
-    {
-        if (!success)
-        {
-            <MudText Typo="Typo.h4" Style="text-align: center;">Phiên xác thực của bạn đã hết hạn, vui lòng thử lại!</MudText>
-        }
-    }
-</MudContainer>
+<ValidationLoading Key="@key"/>
+
 
 @code {
     [Parameter]
     public string key { get; set; }
-    bool loading = true;
-    bool success = false;
-
-    protected override void OnInitialized()
-    {
-        Task.Delay(2000);
-        loading = false;
-    }
 }

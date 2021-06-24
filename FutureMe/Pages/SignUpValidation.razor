@@ -1,0 +1,9 @@
+﻿@page "/signup-validation/{key}"
+
+<ValidationLoading Key="@key" SignUp="true" />
+
+
+@code {
+    [Parameter]
+    public string key { get; set; }
+}
