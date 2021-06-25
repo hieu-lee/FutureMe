@@ -1,4 +1,7 @@
-﻿<MudContainer MaxWidth="MaxWidth.Large">
+﻿@inject FutureMeClient Http
+@inject NavigationManager NavManager
+
+<MudContainer MaxWidth="MaxWidth.Large">
     @if (loading)
     {
         <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
@@ -10,20 +13,41 @@
         {
             <MudText Typo="Typo.h4" Style="text-align: center;">Phiên xác thực của bạn đã hết hạn, vui lòng thử lại!</MudText>
         }
+        else
+        {
+            <MudText Typo="Typo.h4" Style="text-align: center;">@SuccessMessage</MudText>
+        }
     }
 </MudContainer>
 
 @code {
     [Parameter]
-    public bool SignUp { get; set; } = false;
-    [Parameter]
     public string Key { get; set; }
+    [Parameter]
+    public bool SignUp { get; set; } = false;
     bool loading = true;
     bool success = false;
+    string SuccessMessage = string.Empty;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Task.Delay(2000);
+        if (SignUp)
+        {
+            SuccessMessage = "Xác thực email và tạo tài khoản mới thành công!";
+        }
+        else
+        {
+            SuccessMessage = "Xác thực email thành công, thư của bạn đã được gửi!";
+        }
+        var res = await Http.UserClient.GetStringAsync($"api/Emails/validate/{Key}");
+        if (res == "Xác thực email thành công")
+        {
+            success = true;
+        }
+        else
+        {
+            success = false;
+        }
         loading = false;
     }
 }
