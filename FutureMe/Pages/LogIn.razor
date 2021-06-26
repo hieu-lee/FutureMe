@@ -8,8 +8,10 @@
     <MudCard Style="padding: 3ch; border-top: 10px solid #594AE2; margin: 15ch 0;">
         @if (Session.Logged)
         {
-            <MudText>Bạn đã đăng nhập với tài khoản @Session.MyAccount.Username</MudText>
-            <MudButton Style="margin: 0 auto;" OnClick="SignOut" Variant="Variant.Filled" Color="Color.Primary">Đăng xuất</MudButton>
+            <MudText Typo="Typo.h4">Bạn đã đăng nhập với tài khoản @Session.MyAccount.Username</MudText>
+            <div class="d-flex justify-content-center">
+                <MudButton OnClick="SignOut" Variant="Variant.Filled" Color="Color.Primary">Đăng xuất</MudButton>
+            </div>
         }
         else
         {
