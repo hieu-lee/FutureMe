@@ -1,19 +1,22 @@
-﻿@page "/letters"
+﻿@page "/letters/{id}" 
+@page "/letters"
+@inject FutureMeClient Http 
 @inject ISnackbar Snackbar
+@inject SessionData Session
 
 <MudContainer MaxWidth="MaxWidth.Large">
     <MudCard Style="max-width: 65ch; margin: 3ch auto; padding: 3ch; border-top: 10px solid #594AE2">
-        <EditForm Model="NewFutureLetter" OnValidSubmit="ValidSubmit">
+        <EditForm Model="MyFutureLetter" OnValidSubmit="ValidSubmit">
             <DataAnnotationsValidator />
                 <div class="d-flex justify-content-between">
                     @if (TitleEditing)
                     {
-                        <MudTextField Label="Tiêu đề" @bind-Value="@NewFutureLetter.Title" For="() => NewFutureLetter.Title" />
+                        <MudTextField Label="Tiêu đề" @bind-Value="@MyFutureLetter.Title" For="() => MyFutureLetter.Title" />
                     }
                     else
                     {
                         <div class="d-flex align-items-center">
-                            <MudText Typo="Typo.h5">@NewFutureLetter.Title</MudText>
+                            <MudText Typo="Typo.h5">@MyFutureLetter.Title</MudText>
                         </div>
                     }
                     <div class="d-flex align-items-center">
@@ -23,8 +26,8 @@
                     </div>
                 </div>
                 <hr />
-                <MudTextField Required="true" Placeholder="Gửi tôi trong tương lai" @bind-Value="NewFutureLetter.Content" For="@(() => NewFutureLetter.Content)" Lines="10" />
-                <MudText Typo="Typo.caption">@NewFutureLetter.WordCount() word(s)</MudText>
+                <MudTextField Required="true" Placeholder="Gửi tôi trong tương lai" @bind-Value="MyFutureLetter.Content" For="@(() => MyFutureLetter.Content)" Lines="10" />
+                <MudText Typo="Typo.caption">@MyFutureLetter.WordCount() word(s)</MudText>
                 <br />
                 @if (!ExactDateMode)
                 {
@@ -41,7 +44,7 @@
                     <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">GỬI TỚI TÔI VÀO NGÀY</MudText>
                     <div class="d-flex">
                         <div>
-                            <MudDatePicker MinDate="DateTime.Today" Label="Ngày nhận thư" @bind-Date="NewFutureLetter.DeliverDate" For="@(() => NewFutureLetter.DeliverDate)" />
+                            <MudDatePicker MinDate="DateTime.Today" Label="Ngày nhận thư" @bind-Date="MyFutureLetter.DeliverDate" For="@(() => MyFutureLetter.DeliverDate)" />
                         </div>
                         <div class="d-flex ml-4 align-items-end">
                             <MudText @onclick="() => { ExactDateMode = false; }" Color="Color.Primary" Typo="Typo.caption" Style="cursor: pointer;">Chọn khoảng thời gian</MudText>
@@ -50,12 +53,12 @@
                 }
                 <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐÂY LÀ MỘT BỨC THƯ</MudText>
                 <div>
-                    <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Private; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Private)?Variant.Filled:Variant.Outlined">Riêng tư</MudChip>
-                    <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Anonymous; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Anonymous)?Variant.Filled:Variant.Outlined">Công khai nhưng ẩn danh</MudChip>
-                    <MudChip Size="Size.Small" @onclick="() => { NewFutureLetter.Privacy = PrivacyMode.Public; }" Style="cursor: pointer" Color="Color.Primary" Variant="(NewFutureLetter.Privacy == PrivacyMode.Public)?Variant.Filled:Variant.Outlined">Hoàn toàn công khai</MudChip>
+                    <MudChip Size="Size.Small" @onclick="() => { MyFutureLetter.Privacy = PrivacyMode.Private; }" Style="cursor: pointer" Color="Color.Primary" Variant="(MyFutureLetter.Privacy == PrivacyMode.Private)?Variant.Filled:Variant.Outlined">Riêng tư</MudChip>
+                    <MudChip Size="Size.Small" @onclick="() => { MyFutureLetter.Privacy = PrivacyMode.Anonymous; }" Style="cursor: pointer" Color="Color.Primary" Variant="(MyFutureLetter.Privacy == PrivacyMode.Anonymous)?Variant.Filled:Variant.Outlined">Công khai nhưng ẩn danh</MudChip>
+                    <MudChip Size="Size.Small" @onclick="() => { MyFutureLetter.Privacy = PrivacyMode.Public; }" Style="cursor: pointer" Color="Color.Primary" Variant="(MyFutureLetter.Privacy == PrivacyMode.Public)?Variant.Filled:Variant.Outlined">Hoàn toàn công khai</MudChip>
                 </div>
                 <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐỊA CHỈ EMAIL</MudText>
-                <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MailOutline" Style="margin: 1ch 0;" @bind-Value="NewFutureLetter.Email" Required="true" Placeholder="Email của bạn" />
+                <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MailOutline" Style="margin: 1ch 0;" @bind-Value="MyFutureLetter.Email" Required="true" Placeholder="Email của bạn" />
                 <MudCardActions>
                     <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Secondary" ButtonType="ButtonType.Submit">Gửi tới tương lai!</MudButton>
                 </MudCardActions>
@@ -65,15 +68,24 @@
 </MudContainer>
 
 @code {
-    Letter NewFutureLetter = new() { Title = $"Một bức thư từ {DateTime.Now.ToShortDateString()}", Content = "Gửi tôi trong tương lai,\n" };
+    [Parameter]
+    public string Id { get; set; }
+    Letter MyFutureLetter = new() { Title = $"Một bức thư từ {DateTime.Now.ToShortDateString()}", Content = "Gửi tôi trong tương lai,\n" };
     bool TitleEditing = false;
     string EditIcon => (TitleEditing) ? Icons.Material.Filled.EditOff : Icons.Material.Filled.Edit;
     int YearsDelivery = 1;
     bool ExactDateMode = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        SetDeliverDate(YearsDelivery);
+        if (string.IsNullOrWhiteSpace(Id))
+        {
+            SetDeliverDate(YearsDelivery);
+        }
+        else
+        {
+            MyFutureLetter = await Http.LetterAndFeedbackClient.GetFromJsonAsync<Letter>($"api/Letter/get-letrer/{Id}");
+        }
     }
 
     bool IsValidEmail(string email)
@@ -92,14 +104,27 @@
     private void SetDeliverDate(int i)
     {
         YearsDelivery = i;
-        NewFutureLetter.DeliverDate = DateTime.Now.Date.AddYears(YearsDelivery);
+        MyFutureLetter.DeliverDate = DateTime.Now.Date.AddYears(YearsDelivery);
     }
 
-    private void ValidSubmit()
+    private async Task ValidSubmit()
     {
-        if (IsValidEmail(NewFutureLetter.Email))
+        if (IsValidEmail(MyFutureLetter.Email))
         {
-            Snackbar.Add("Gửi thư thành công! Hãy xác thực email của bạn", Severity.Success);
+            if (string.IsNullOrWhiteSpace(Id))
+            {
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync<Letter>("api/Letter/edit-letter", MyFutureLetter);
+            }
+            else
+            {
+                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/create-letter", MyFutureLetter);
+            }
+            string m = "Gửi thư thành công!";
+            if (!Session.Logged || MyFutureLetter.Email != Session.MyAccount.Email)
+            {
+                m += " Hãy xác thực email của bạn.";  
+            }
+            Snackbar.Add(m, Severity.Success);
         }
         else
         {

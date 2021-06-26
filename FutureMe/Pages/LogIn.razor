@@ -8,10 +8,13 @@
     <MudCard Style="padding: 3ch; border-top: 10px solid #594AE2; margin: 15ch 0;">
         @if (Session.Logged)
         {
-            <MudText Typo="Typo.h4">Bạn đã đăng nhập với tài khoản @Session.MyAccount.Username</MudText>
-            <div class="d-flex justify-content-center">
-                <MudButton OnClick="SignOut" Variant="Variant.Filled" Color="Color.Primary">Đăng xuất</MudButton>
+            <div style="margin: 40vh auto;">
+                <MudText Typo="Typo.h4">Bạn đã đăng nhập với tài khoản @Session.MyAccount.Username</MudText>
+                <div class="d-flex justify-content-center">
+                    <MudButton OnClick="SignOut" Variant="Variant.Filled" Color="Color.Primary">Đăng xuất</MudButton>
+                </div>
             </div>
+            
         }
         else
         {
@@ -71,10 +74,11 @@
         var res = await Http.UserClient.PostAsJsonAsync<Account>("/api/Accounts/sign-in", account);
         if (res.IsSuccessStatusCode)
         {
-            var key = await res.Content.ReadAsStringAsync();
-            Session.Key = key;
+            var response = await res.Content.ReadFromJsonAsync<Tuple<string, string>>();
+            Session.Key = response.Item1;
+            account.Username = response.Item2;
             Session.MyAccount = account;
-            await localStorage.SetItemAsync<string>("FutureMeKey", key);
+            await localStorage.SetItemAsync<string>("FutureMeKey", response.Item1);
             Snackbar.Add("Đăng nhập thành công", Severity.Success);
         }
         else if (res.StatusCode == System.Net.HttpStatusCode.NotFound)
