@@ -31,7 +31,14 @@
                         <br />
                         <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Label="Mật khẩu" @bind-Value="account.Password" For="() => account.Password" InputType="InputType.Password" />
                         <MudCardActions Style="margin-top: 1ch;">
-                            <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Tạo tài khoản</MudButton>
+                            @if (loading)
+                            {
+                                <MudProgressCircular Style="margin: 0 auto;" Color="Color.Primary" Indeterminate="true" />
+                            }
+                            else
+                            {
+                                <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Tạo tài khoản</MudButton>
+                            }
                         </MudCardActions>
                     </EditForm>
                     <MudText>Đã có tài khoản FutureMe? <MudLink Href="users/false">Đăng nhập</MudLink></MudText>
@@ -51,7 +58,14 @@
                     <br />
                     <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Label="Mật khẩu" @bind-Value="account.Password" For="() => account.Password" InputType="InputType.Password" />
                     <MudCardActions Style="margin-top: 1ch;">
-                        <MudButton Style="margin: 0 auto" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Đăng nhập</MudButton>
+                        @if (loading)
+                        {
+                            <MudProgressCircular Style="margin: 0 auto;" Color="Color.Primary" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <MudButton Style="margin: 0 auto" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Đăng nhập</MudButton>
+                        }
                     </MudCardActions>
                 </EditForm>
                 <MudText>Chưa có tài khoản FutureMe? <MudLink Href="users/true">Tạo tài khoản</MudLink></MudText>
@@ -66,11 +80,13 @@
     [Parameter]
     public bool register { get; set; }
 
+    bool loading = false;
     bool ValidationSent = false;
     Account account = new();
 
     private async Task SignIn()
     {
+        loading = true;
         var res = await Http.UserClient.PostAsJsonAsync<Account>("/api/Accounts/sign-in", account);
         if (res.IsSuccessStatusCode)
         {
@@ -89,10 +105,12 @@
         {
             Snackbar.Add("Bạn nhập sai mật khẩu", Severity.Error);
         }
+        loading = false;
     }
 
     private async Task SignUp()
     {
+        loading = true;
         var res = await Http.UserClient.PostAsJsonAsync<Account>("/api/Accounts/validate-sign-up", account);
         if (res.IsSuccessStatusCode)
         {
@@ -103,6 +121,7 @@
         {
             Snackbar.Add("Email đã được đăng ký với một tài khoản khác", Severity.Error);
         }
+        loading = false;
     }
 
     private async Task SignOut()

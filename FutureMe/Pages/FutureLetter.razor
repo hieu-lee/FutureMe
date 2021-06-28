@@ -60,7 +60,7 @@
                 <MudText Typo="Typo.subtitle2" Style="margin-top: 3ch;">ĐỊA CHỈ EMAIL</MudText>
                 <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MailOutline" Style="margin: 1ch 0;" @bind-Value="MyFutureLetter.Email" Required="true" Placeholder="Email của bạn" />
                 <MudCardActions>
-                    <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Secondary" ButtonType="ButtonType.Submit">Gửi tới tương lai!</MudButton>
+                    <MudButton Disabled="loading" Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Secondary" ButtonType="ButtonType.Submit">Gửi tới tương lai!</MudButton>
                 </MudCardActions>
                 <MudText Typo="Typo.body2">Bạn sẽ nhận được một email để xác thực email của bạn!</MudText>
             </EditForm>
@@ -70,6 +70,7 @@
 @code {
     [Parameter]
     public string Id { get; set; }
+    bool loading = false;
     Letter MyFutureLetter = new() { Title = $"Một bức thư từ {DateTime.Now.ToShortDateString()}", Content = "Gửi tôi trong tương lai,\n" };
     bool TitleEditing = false;
     string EditIcon => (TitleEditing) ? Icons.Material.Filled.EditOff : Icons.Material.Filled.Edit;
@@ -109,6 +110,7 @@
 
     private async Task ValidSubmit()
     {
+        loading = true;
         if (IsValidEmail(MyFutureLetter.Email))
         {
             if (string.IsNullOrWhiteSpace(Id))
@@ -130,6 +132,6 @@
         {
             Snackbar.Add("Địa chỉ email của bạn không hợp lệ", Severity.Error);
         }
-
+        loading = false;
     }
 }

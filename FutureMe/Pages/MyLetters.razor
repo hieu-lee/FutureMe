@@ -1,5 +1,7 @@
 ﻿@page "/my-letters" 
 @inject ISnackbar Snackbar
+@inject FutureMeClient Http
+@inject SessionData Session
 
 <MudContainer MaxWidth="MaxWidth.Large">
     <div style="margin: 10ch auto; max-width: 83ch;">
@@ -107,6 +109,18 @@
         Icons.Custom.Brands.Awesome,
         Icons.Material.Filled.Public
     };
+    HashSet<Letter> TravelingLetters = new();
+    HashSet<Letter> DeliveredLetters = new();
+    bool ShowFuture = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var task1 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-delivered-letters-email/{Session.MyAccount.Email}");
+        var task2 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"get-traveling-letters-email/{Session.MyAccount.Email}");
+        await Task.WhenAll(task1, task2);
+        TravelingLetters = await task1;
+        DeliveredLetters = await task2;
+    }
 
     private string LetterPrivacyIcon(Letter letter)
     {
@@ -137,24 +151,17 @@
         }
     }
 
-    HashSet<Letter> TravelingLetters = new()
-    {
-        new() { Title = "Lmao", DateCreate = DateTime.Now.Date, DeliverDate = DateTime.Now.Date.AddDays(5), WordNum = 10, Email = email },
-        new() { Title = "Lmao1", DateCreate = DateTime.Now.Date.AddDays(-1), DeliverDate = DateTime.Now.Date.AddDays(3), WordNum = 13, Email = email },
-        new() { Title = "Lmao2", DateCreate = DateTime.Now.Date.AddDays(-3), DeliverDate = DateTime.Now.Date.AddDays(10), WordNum = 15, Email = email }
-    };
-    HashSet<Letter> DeliveredLetters = new();
-    bool ShowFuture = false;
-
-    private void DeleteTravelingLetter(Letter letter)
+    private async Task DeleteTravelingLetter(Letter letter)
     {
         TravelingLetters.Remove(letter);
+        await Http.LetterAndFeedbackClient.DeleteAsync($"delete-letter-by-id/{letter.Id}");
         Snackbar.Add("Xóa thành công một bức thư", Severity.Success);
     }
 
-    private void DeleteDeliveredLetter(Letter letter)
+    private async Task DeleteDeliveredLetter(Letter letter)
     {
         DeliveredLetters.Remove(letter);
+        await Http.LetterAndFeedbackClient.DeleteAsync($"delete-letter-by-id/{letter.Id}");
         Snackbar.Add("Xóa thành công một bức thư", Severity.Success);
     }
 }
