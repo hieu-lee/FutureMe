@@ -4,6 +4,10 @@
     <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
     <div class="content">
         <h4>@LetterItem.Title</h4>
+        @if (LetterItem.Privacy == PrivacyMode.Public)
+        {
+            <h5>@LetterItem.OwnerUsername</h5>
+        }
         <p>
             @DisplayContent
         </p>

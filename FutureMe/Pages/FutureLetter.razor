@@ -81,6 +81,8 @@
     {
         if (string.IsNullOrWhiteSpace(Id))
         {
+            MyFutureLetter.OwnerUsername = (Session.Logged)? Session.MyAccount.Username : string.Empty;
+            MyFutureLetter.OwnerEmail = Session.MyAccount.Email;
             SetDeliverDate(YearsDelivery);
         }
         else
@@ -119,6 +121,10 @@
             }
             else
             {
+                if (!Session.Logged && MyFutureLetter.Privacy == PrivacyMode.Public) 
+                {
+                    MyFutureLetter.Privacy = PrivacyMode.Anonymous;
+                }
                 await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/create-letter", MyFutureLetter);
             }
             string m = "Gửi thư thành công!";

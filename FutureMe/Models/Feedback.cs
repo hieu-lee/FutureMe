@@ -14,5 +14,7 @@ namespace FutureMe.Models
         public string Content { get; set; }
         public DateTime PostTime { get; set; } = DateTime.Now;
         public int Likes { get; set; } = 0;
+        [Required(ErrorMessage = "Hãy đánh giá dịch vụ của FutureMe")]
+        public int Rate { get; set; } = 5;
     }
 }
