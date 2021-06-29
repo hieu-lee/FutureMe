@@ -1,4 +1,6 @@
-﻿<div class="letter-card">
+﻿@inject FutureMeClient Http
+
+<div class="letter-card">
     <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
     <div class="content">
         <h4>@LetterItem.Title</h4>
@@ -47,16 +49,18 @@
         DisplayContent = (LetterItem.Content.Length > 500) ? LetterItem.Content.Substring(0, 500) + "..." : LetterItem.Content;
     }
 
-    private void LikesChanged()
+    private async Task LikesChanged()
     {
         Liked = !Liked;
         if (Liked)
         {
             LetterItem.Likes++;
+            await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-increment-likes", LetterItem);
         }
         else
         {
             LetterItem.Likes--;
+            await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", LetterItem);
         }
     }
 

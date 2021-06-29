@@ -1,4 +1,5 @@
 ﻿@page "/read-letters"
+@inject FutureMeClient Http
 @inject NavigationManager NavManager
 
 <header>
@@ -11,7 +12,7 @@
         <ul style="list-style: none">
             @for (int i = 0; i < letters.Count; i++)
             {
-                <li class="letter-card-holder" @onclick="@(() => { NavManager.NavigateTo("read-letter"); })">
+                <li class="letter-card-holder" @onclick="@(() => { NavManager.NavigateTo($"read-letter/{letters[i].Id}"); })">
                     <LetterCard @bind-LetterItem="letters[i]" />
                 </li>
             }
@@ -25,16 +26,8 @@
     const string lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui dicta minus molestiae vel beatae natus eveniet ratione temporibus aperiam harum alias officiis assumenda officia quibusdam deleniti eos cupiditate dolore doloribus!";
     List<Letter> letters = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        for (int i = 0; i < 5; i++)
-        {
-            letters.Add(new()
-            {
-                Content = lorem + lorem + lorem + lorem + lorem,
-                DeliverDate = DateTime.Now,
-                Privacy = PrivacyMode.Public
-            });
-        }
+        letters = await Http.LetterAndFeedbackClient.GetFromJsonAsync<List<Letter>>("api/Letter/get-all-public-letters");
     }
 }
