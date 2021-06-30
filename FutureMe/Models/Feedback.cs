@@ -10,7 +10,7 @@ namespace FutureMe.Models
     {
         [Required]
         public string Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Vui lòng điền nội dung phản hồi của bạn")]
         public string Content { get; set; }
         public DateTime PostTime { get; set; } = DateTime.Now;
         public int Likes { get; set; } = 0;

@@ -1,0 +1,84 @@
+﻿@page "/add-feedback"
+@inject SessionData Session
+@inject ISnackbar Snackbar
+@inject NavigationManager NavManager
+@inject FutureMeClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    @if (DataLoading)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        <MudText Typo="Typo.h3" Style="text-align: center;">Đang tải...</MudText>
+    }
+    else
+    {
+        <MudCard Style="max-width: 65ch; margin: 3ch auto; padding: 3ch; border-top: 10px solid #594AE2">
+            @if (!FeedbackSent)
+            {
+                <div class="header" style="display: flex; margin: 1ch 0;">
+                    <MudAvatar Color="Color.Primary">@FirstLetter</MudAvatar>
+                    <MudText Typo="Typo.subtitle1" Style="margin-left: 1ch;">@NewFeedback.Username</MudText>
+                </div>
+                <EditForm Model="NewFeedback" OnValidSubmit="SubmitFeedback">
+                    <DataAnnotationsValidator />
+                    <MudTextField @bind-Value="NewFeedback.Content" For="() => NewFeedback.Content" Lines="5" Label="Phản hồi" />
+                    <MudText Style="margin-top: 1ch;" Typo="Typo.h6">Hãy đánh giá chúng tôi</MudText>
+                    <div class="d-flex justify-content-center">
+                        <MudRating SelectedValue="NewFeedback.Rate" MaxValue="5" />
+                    </div>
+                    <MudCardActions>
+                        <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gửi phản hồi</MudButton>
+                    </MudCardActions>
+                </EditForm>
+            }
+            else
+            {
+                <MudText Style="margin: 5ch 0" Typo="Typo.h4" Align="Align.Center">
+                    Phản hồi đã được ghi nhận
+                </MudText>
+            }
+        </MudCard>
+    }
+</MudContainer>
+
+@code {
+    bool FeedbackSent = false;
+    bool DataLoading = true;
+    Feedback NewFeedback = new();
+    string FirstLetter = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Session.Logged)
+        {
+            DataLoading = false;
+            NewFeedback.Username = Session.MyAccount.Username;
+            FirstLetter = Session.MyAccount.Username[0].ToString().ToUpper();
+        }
+        else
+        {
+            Session.Key = await localStorage.GetItemAsync<string>("FutureMeKey");
+            if (!string.IsNullOrWhiteSpace(Session.Key))
+            {
+                Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
+            }
+            DataLoading = false;
+            if (!Session.Logged)
+            {
+                NavManager.NavigateTo("users/false");
+            }
+            else
+            {
+                NewFeedback.Username = Session.MyAccount.Username;
+                FirstLetter = Session.MyAccount.Username[0].ToString().ToUpper();
+            }
+        }
+    }
+
+    private void SubmitFeedback()
+    {
+        FeedbackSent = true;
+        Snackbar.Add("Cảm ơn về phản hồi của bạn", Severity.Success);
+    }
+}

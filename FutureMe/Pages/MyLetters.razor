@@ -1,7 +1,8 @@
-﻿@page "/my-letters" 
+﻿@page "/my-letters"
 @inject ISnackbar Snackbar
 @inject FutureMeClient Http
 @inject SessionData Session
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <MudContainer MaxWidth="MaxWidth.Large">
     <div style="margin: 10ch auto; max-width: 83ch;">
@@ -108,7 +109,7 @@
         Icons.Material.Filled.Lock,
         Icons.Custom.Brands.Awesome,
         Icons.Material.Filled.Public
-    };
+        };
     HashSet<Letter> TravelingLetters = new();
     HashSet<Letter> DeliveredLetters = new();
     bool ShowFuture = false;
@@ -124,7 +125,7 @@
 
     private string LetterPrivacyIcon(Letter letter)
     {
-        switch(letter.Privacy)
+        switch (letter.Privacy)
         {
             case (PrivacyMode.Private):
                 return PrivacyIcons[0];

@@ -4,30 +4,66 @@
 @inject SessionData Session
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<div class="d-flex justify-content-center align-items-center" style="background: #f0f0f0">
-    <MudCard Style="padding: 3ch; border-top: 10px solid #594AE2; margin: 15ch 0;">
-        @if (Session.Logged)
-        {
-            <div style="margin: 40vh auto;">
-                <MudText Typo="Typo.h4">Bạn đã đăng nhập với tài khoản @Session.MyAccount.Username</MudText>
-                <div class="d-flex justify-content-center">
-                    <MudButton OnClick="SignOut" Variant="Variant.Filled" Color="Color.Primary">Đăng xuất</MudButton>
-                </div>
-            </div>
-            
-        }
-        else
-        {
-            @if (register)
+@if (DataLoading)
+{
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        <MudText Typo="Typo.h3" Style="text-align: center;">Đang tải...</MudText>
+    </MudContainer>
+}
+else
+{
+    <div class="d-flex justify-content-center align-items-center" style="background: #f0f0f0">
+        <MudCard Style="padding: 3ch; border-top: 10px solid #594AE2; margin: 15ch 0;">
+            @if (Session.Logged)
             {
-                if (!ValidationSent)
+                <div style="margin: 15vh auto;">
+                    <MudText Typo="Typo.h4">Bạn đã đăng nhập với tài khoản @Session.MyAccount.Username</MudText>
+                    <div class="d-flex justify-content-center" style="margin-top: 2ch;">
+                        <MudButton OnClick="SignOut" Variant="Variant.Filled" Color="Color.Primary">Đăng xuất</MudButton>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                @if (register)
                 {
-                    <MudText Style="margin-bottom: 1ch;" Align="Align.Center" Typo="Typo.h5">Tạo tài khoản FutureMe</MudText>
-                    <EditForm Model="account" OnValidSubmit="SignUp">
+                    if (!ValidationSent)
+                    {
+                        <MudText Style="margin-bottom: 1ch;" Align="Align.Center" Typo="Typo.h5">Tạo tài khoản FutureMe</MudText>
+                        <EditForm Model="account" OnValidSubmit="SignUp">
+                            <DataAnnotationsValidator />
+                            <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Mail" HelperText="Bạn sẽ nhận được một email xác thực" Label="Email" @bind-Value="account.Email" For="() => account.Email" />
+                            <br />
+                            <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.People" Label="Tên người dùng" @bind-Value="account.Username" For="() => account.Username" />
+                            <br />
+                            <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Label="Mật khẩu" @bind-Value="account.Password" For="() => account.Password" InputType="InputType.Password" />
+                            <MudCardActions Style="margin-top: 1ch;">
+                                @if (loading)
+                                {
+                                    <MudProgressCircular Style="margin: 0 auto;" Color="Color.Primary" Indeterminate="true" />
+                                }
+                                else
+                                {
+                                    <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Tạo tài khoản</MudButton>
+                                }
+                            </MudCardActions>
+                        </EditForm>
+                        <MudText>Đã có tài khoản FutureMe? <MudLink Href="users/false">Đăng nhập</MudLink></MudText>
+                    }
+                    else
+                    {
+                        <MudText Style="margin: 40vh auto;" Align="Align.Center" Typo="Typo.h4">Hãy xác thực email của bạn để hoàn thành đăng ký tài khoản FutureMe</MudText>
+                    }
+
+                }
+                else
+                {
+                    <MudText Style="margin-bottom: 1ch;" Align="Align.Center" Typo="Typo.h5">Đăng nhập vào FutureMe</MudText>
+                    <EditForm Model="account" OnValidSubmit="SignIn">
                         <DataAnnotationsValidator />
-                        <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Mail" HelperText="Bạn sẽ nhận được một email xác thực" Label="Email" @bind-Value="account.Email" For="() => account.Email" />
-                        <br />
-                        <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.People" Label="Tên người dùng" @bind-Value="account.Username" For="() => account.Username" />
+                        <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Mail" Label="Email" @bind-Value="account.Email" For="() => account.Email" />
                         <br />
                         <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Label="Mật khẩu" @bind-Value="account.Password" For="() => account.Password" InputType="InputType.Password" />
                         <MudCardActions Style="margin-top: 1ch;">
@@ -37,52 +73,41 @@
                             }
                             else
                             {
-                                <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Tạo tài khoản</MudButton>
+                                <MudButton Style="margin: 0 auto" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Đăng nhập</MudButton>
                             }
                         </MudCardActions>
                     </EditForm>
-                    <MudText>Đã có tài khoản FutureMe? <MudLink Href="users/false">Đăng nhập</MudLink></MudText>
+                    <MudText>Chưa có tài khoản FutureMe? <MudLink Href="users/true">Tạo tài khoản</MudLink></MudText>
+
                 }
-                else
-                {
-                    <MudText Style="margin: 40vh auto;" Align="Align.Center" Typo="Typo.h4">Hãy xác thực email của bạn để hoàn thành đăng ký tài khoản FutureMe</MudText>
-                }
-
             }
-            else
-            {
-                <MudText Style="margin-bottom: 1ch;" Align="Align.Center" Typo="Typo.h5">Đăng nhập vào FutureMe</MudText>
-                <EditForm Model="account" OnValidSubmit="SignIn">
-                    <DataAnnotationsValidator />
-                    <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Mail" Label="Email" @bind-Value="account.Email" For="() => account.Email" />
-                    <br />
-                    <MudTextField Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Label="Mật khẩu" @bind-Value="account.Password" For="() => account.Password" InputType="InputType.Password" />
-                    <MudCardActions Style="margin-top: 1ch;">
-                        @if (loading)
-                        {
-                            <MudProgressCircular Style="margin: 0 auto;" Color="Color.Primary" Indeterminate="true" />
-                        }
-                        else
-                        {
-                            <MudButton Style="margin: 0 auto" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Đăng nhập</MudButton>
-                        }
-                    </MudCardActions>
-                </EditForm>
-                <MudText>Chưa có tài khoản FutureMe? <MudLink Href="users/true">Tạo tài khoản</MudLink></MudText>
 
-            }
-        }
+        </MudCard>
+    </div>
+}
 
-    </MudCard>
-</div>
 
 @code {
     [Parameter]
     public bool register { get; set; }
 
+    bool DataLoading = true;
     bool loading = false;
     bool ValidationSent = false;
     Account account = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Session.Logged)
+        {
+            Session.Key = await localStorage.GetItemAsync<string>("FutureMeKey");
+            if (!string.IsNullOrWhiteSpace(Session.Key))
+            {
+                Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
+            }
+        }
+        DataLoading = false;
+    }
 
     private async Task SignIn()
     {

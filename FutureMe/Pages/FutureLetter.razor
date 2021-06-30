@@ -1,13 +1,21 @@
-﻿@page "/letters/{id}" 
+﻿@page "/letters/{id}"
 @page "/letters"
-@inject FutureMeClient Http 
+@inject FutureMeClient Http
 @inject ISnackbar Snackbar
 @inject SessionData Session
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <MudContainer MaxWidth="MaxWidth.Large">
-    <MudCard Style="max-width: 65ch; margin: 3ch auto; padding: 3ch; border-top: 10px solid #594AE2">
-        <EditForm Model="MyFutureLetter" OnValidSubmit="ValidSubmit">
-            <DataAnnotationsValidator />
+    @if (DataLoading)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        <MudText Typo="Typo.h3" Style="text-align: center;">Đang tải...</MudText>
+    }
+    else
+    {
+        <MudCard Style="max-width: 65ch; margin: 3ch auto; padding: 3ch; border-top: 10px solid #594AE2">
+            <EditForm Model="MyFutureLetter" OnValidSubmit="ValidSubmit">
+                <DataAnnotationsValidator />
                 <div class="d-flex justify-content-between">
                     @if (TitleEditing)
                     {
@@ -64,13 +72,15 @@
                 </MudCardActions>
                 <MudText Typo="Typo.body2">Bạn sẽ nhận được một email để xác thực email của bạn!</MudText>
             </EditForm>
-    </MudCard>
+        </MudCard>
+    }
 </MudContainer>
 
 @code {
     [Parameter]
     public string Id { get; set; }
     bool loading = false;
+    bool DataLoading = true;
     Letter MyFutureLetter = new() { Title = $"Một bức thư từ {DateTime.Now.ToShortDateString()}", Content = "Gửi tôi trong tương lai,\n" };
     bool TitleEditing = false;
     string EditIcon => (TitleEditing) ? Icons.Material.Filled.EditOff : Icons.Material.Filled.Edit;
@@ -81,8 +91,17 @@
     {
         if (string.IsNullOrWhiteSpace(Id))
         {
-            MyFutureLetter.OwnerUsername = (Session.Logged)? Session.MyAccount.Username : string.Empty;
-            MyFutureLetter.OwnerEmail = Session.MyAccount.Email;
+            if (!Session.Logged)
+            {
+                Session.Key = await localStorage.GetItemAsync<string>("FutureMeKey");
+                if (!string.IsNullOrWhiteSpace(Session.Key))
+                {
+                    Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
+                }
+            }
+            DataLoading = false;
+            MyFutureLetter.OwnerUsername = (Session.Logged) ? Session.MyAccount.Username : string.Empty;
+            MyFutureLetter.OwnerEmail = (Session.Logged) ? Session.MyAccount.Email : string.Empty;
             SetDeliverDate(YearsDelivery);
         }
         else
@@ -121,7 +140,7 @@
             }
             else
             {
-                if (!Session.Logged && MyFutureLetter.Privacy == PrivacyMode.Public) 
+                if (!Session.Logged && MyFutureLetter.Privacy == PrivacyMode.Public)
                 {
                     MyFutureLetter.Privacy = PrivacyMode.Anonymous;
                 }
@@ -130,7 +149,7 @@
             string m = "Gửi thư thành công!";
             if (!Session.Logged || MyFutureLetter.Email != Session.MyAccount.Email)
             {
-                m += " Hãy xác thực email của bạn.";  
+                m += " Hãy xác thực email của bạn.";
             }
             Snackbar.Add(m, Severity.Success);
         }
