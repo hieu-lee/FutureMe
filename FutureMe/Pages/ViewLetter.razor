@@ -1,49 +1,56 @@
 ﻿@page "/read-letter/{Id}"
 @inject FutureMeClient Http
 
-<MudContainer MaxWidth="MaxWidth.Large">
-    <MudCard Style="padding: 5ch; margin: 5ch auto;">
-        <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
-        <div class="content">
-            <h4>Một bức thư từ @MyLetter.DateCreate.ToShortDateString()</h4>
-            <h5>
-                @MyLetter.OwnerUsername
-            </h5>
-            <MudDivider DividerType="DividerType.FullWidth" />
-            <p style="margin-top: 1ch;">
-                @MyLetter.Content
-            </p>
-        </div>
-        <MudText Style="color: #999" Typo="Typo.caption">@MyLetter.DateCreate.ToLongDateString() &#8594; @MyLetter.DeliverDate.Value.ToLongDateString() • @MyLetter.WordNum word(s)</MudText>
-        <div class="d-flex justify-content-end">
-            <div>
-                <MudTooltip Text="Like">
-                    <MudIconButton @onclick="LikesChanged" Icon="@LikeIcon" />
-                </MudTooltip>
-                @MyLetter.Likes
+@if (!DataLoading)
+{
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudCard Style="padding: 5ch; margin: 5ch auto;">
+            <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
+            <div class="content">
+                <h4>Một bức thư từ @MyLetter.DateCreate.ToShortDateString()</h4>
+                <h5>
+                    @MyLetter.OwnerUsername
+                </h5>
+                <MudDivider DividerType="DividerType.FullWidth" />
+                <p style="margin-top: 1ch;">
+                    @MyLetter.Content
+                </p>
             </div>
-            <div style="margin-left: 2ch;">
-                <MudTooltip Text="Report">
-                    <MudIconButton Icon="@FlagIcon" @onclick="() => { Flagged = !Flagged; }" />
-                </MudTooltip>
+            <MudText Style="color: #999" Typo="Typo.caption">@MyLetter.DateCreate.ToLongDateString() &#8594; @MyLetter.DeliverDate.Value.ToLongDateString() • @MyLetter.WordNum word(s)</MudText>
+            <div class="d-flex justify-content-end">
+                <div>
+                    <MudTooltip Text="Like">
+                        <MudIconButton @onclick="LikesChanged" Icon="@LikeIcon" />
+                    </MudTooltip>
+                    @MyLetter.Likes
+                </div>
+                <div style="margin-left: 2ch;">
+                    <MudTooltip Text="Report">
+                        <MudIconButton Icon="@FlagIcon" @onclick="() => { Flagged = !Flagged; }" />
+                    </MudTooltip>
+                </div>
             </div>
-        </div>
-    </MudCard>
-</MudContainer>
+        </MudCard>
+    </MudContainer>
+}
+
 
 @code {
     [Parameter]
     public string Id { get; set; }
+    bool DataLoading = true;
     Letter MyLetter = new();
     bool Flagged = false;
     bool Liked = false;
-    TimeSpan TravelledTime => MyLetter.DeliverDate.Value - MyLetter.DateCreate;
+    TimeSpan TravelledTime;
     string LikeIcon => Liked ? Icons.Material.Filled.Favorite : Icons.Material.Filled.FavoriteBorder;
     string FlagIcon => Flagged ? Icons.Material.Filled.Flag : Icons.Material.Filled.OutlinedFlag;
 
     protected override async Task OnInitializedAsync()
     {
         MyLetter = await Http.LetterAndFeedbackClient.GetFromJsonAsync<Letter>($"api/Letter/get-letter-from-id/{Id}");
+        TravelledTime = MyLetter.DeliverDate.Value - MyLetter.DateCreate;
+        DataLoading = false;
     }
 
     private async Task LikesChanged()

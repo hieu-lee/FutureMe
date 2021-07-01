@@ -19,7 +19,6 @@ namespace FutureMe.Models
         public DateTime? DeliverDate { get; set; }
         [Required]
         public PrivacyMode Privacy { get; set; } = 0;
-        public string OwnerEmail { get; set; }
         public string OwnerUsername { get; set; }
         public DateTime DateCreate { get; init; } = DateTime.Now.Date;
         public int Likes { get; set; } = 0;

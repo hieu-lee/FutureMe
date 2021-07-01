@@ -134,7 +134,7 @@
         loading = true;
         if (IsValidEmail(MyFutureLetter.Email))
         {
-            if (string.IsNullOrWhiteSpace(Id))
+            if (!string.IsNullOrWhiteSpace(Id))
             {
                 await Http.LetterAndFeedbackClient.PutAsJsonAsync<Letter>("api/Letter/edit-letter", MyFutureLetter);
             }
@@ -144,7 +144,7 @@
                 {
                     MyFutureLetter.Privacy = PrivacyMode.Anonymous;
                 }
-                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/create-letter", MyFutureLetter);
+                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/create-new-letter", MyFutureLetter);
             }
             string m = "Gửi thư thành công!";
             if (!Session.Logged || MyFutureLetter.Email != Session.MyAccount.Email)

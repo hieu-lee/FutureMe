@@ -8,6 +8,7 @@ namespace FutureMe.Models
 {
     public class Feedback
     {
+        public string Id { get; init; } = Guid.NewGuid().ToString();
         [Required]
         public string Username { get; set; }
         [Required(ErrorMessage = "Vui lòng điền nội dung phản hồi của bạn")]
