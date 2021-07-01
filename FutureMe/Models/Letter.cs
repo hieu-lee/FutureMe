@@ -20,6 +20,7 @@ namespace FutureMe.Models
         [Required]
         public PrivacyMode Privacy { get; set; } = 0;
         public string OwnerUsername { get; set; }
+        public string OwnerEmail { get; set; }
         public DateTime DateCreate { get; init; } = DateTime.Now.Date;
         public int Likes { get; set; } = 0;
         public int WordNum { get; set; } = 0;
