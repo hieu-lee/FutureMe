@@ -28,7 +28,14 @@
                         <MudRating SelectedValue="NewFeedback.Rate" MaxValue="5" />
                     </div>
                     <MudCardActions>
-                        <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gửi phản hồi</MudButton>
+                        @if (loading)
+                        {
+                            <MudProgressCircular Style="margin: 0 auto;" Color="Color.Primary" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <MudButton Style="margin: 0 auto;" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Gửi phản hồi</MudButton>
+                        }
                     </MudCardActions>
                 </EditForm>
             }
@@ -43,6 +50,7 @@
 </MudContainer>
 
 @code {
+    bool loading = false;
     bool FeedbackSent = false;
     bool DataLoading = true;
     Feedback NewFeedback = new();
@@ -76,8 +84,11 @@
         }
     }
 
-    private void SubmitFeedback()
+    private async Task SubmitFeedback()
     {
+        loading = true;
+        await Http.LetterAndFeedbackClient.PostAsJsonAsync<Feedback>("api/Feedback/create-new-feedback", NewFeedback);
+        loading = false;
         FeedbackSent = true;
         Snackbar.Add("Cảm ơn về phản hồi của bạn", Severity.Success);
     }

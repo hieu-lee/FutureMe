@@ -1,4 +1,6 @@
-﻿<MudCard Style="max-width: 60ch; padding: 2ch; margin: 0 auto;">
+﻿@inject FutureMeClient Http
+
+<MudCard Style="max-width: 60ch; padding: 2ch; margin: 0 auto;">
     <div class="header" style="display: flex">
         <MudAvatar Color="Color.Primary">@FirstLetter</MudAvatar>
         <MudText Typo="Typo.subtitle1" Style="margin-left: 1ch;">@FeedbackItem.Username</MudText>
@@ -38,16 +40,19 @@
     string FirstLetter => FeedbackItem.Username[0].ToString().ToUpper();
     string LikeIcon => (Liked) ? Icons.Material.Filled.Favorite : Icons.Material.Filled.FavoriteBorder;
 
-    private void LikesChanged()
+    private async Task LikesChanged()
     {
-        if (!Liked)
+        Liked = !Liked;
+        StateHasChanged();
+        if (Liked)
         {
             FeedbackItem.Likes++;
+            await Http.LetterAndFeedbackClient.PutAsJsonAsync<Feedback>("api/Feedback/feedback-increment-likes", FeedbackItem);
         }
         else
         {
             FeedbackItem.Likes--;
+            await Http.LetterAndFeedbackClient.PutAsJsonAsync<Feedback>("api/Feedback/feedback-decrement-likes", FeedbackItem);
         }
-        Liked = !Liked;
     }
 }

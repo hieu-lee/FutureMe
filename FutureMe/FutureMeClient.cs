@@ -15,7 +15,7 @@ namespace FutureMe
 
         public HttpClient LetterAndFeedbackClient { get; init; } = new()
         {
-            BaseAddress = new Uri("https://localhost:44370")
+            BaseAddress = new Uri("https://futuremebackenddatabase.azurewebsites.net")
         };
 
         public FutureMeClient()

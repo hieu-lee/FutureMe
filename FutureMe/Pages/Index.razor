@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject NavigationManager NavManager
+@inject FutureMeClient Http 
 
 <div style="background: #7467EF; color: #ffffff">
     <MudContainer MaxWidth="MaxWidth.Large">
@@ -110,11 +111,8 @@
 @code {
     List<Feedback> feedbacks = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        for (int i = 0; i < 5; i++)
-        {
-            feedbacks.Add(new() { Username = "Hieu Le", Content = "This is the best letter writing app I've ever seen" });
-        }
+        feedbacks = await Http.LetterAndFeedbackClient.GetFromJsonAsync<List<Feedback>>("api/Feedback/get-top-feedbacks");
     }
 }

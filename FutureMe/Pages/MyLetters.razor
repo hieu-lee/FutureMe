@@ -2,35 +2,93 @@
 @inject ISnackbar Snackbar
 @inject FutureMeClient Http
 @inject SessionData Session
+@inject NavigationManager NavManager 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <MudContainer MaxWidth="MaxWidth.Large">
-    <div style="margin: 10ch auto; max-width: 83ch;">
-        <div>
-            <div class="d-flex">
-                <MudIcon Style="margin-right: 1ch" Color="Color.Primary" Icon="@Icons.Material.Filled.AccessTime" />
-                <MudText>Đang du hành thời gian (@TravelingLetters.Count thư)</MudText>
-            </div>
-            @if (TravelingLetters.Count > 0)
-            {
-                <div style="background: #F5F4FD; padding: 2ch; border-radius: 5px; margin: 2ch 0">
-                    <MudText Color="Color.Primary">Bạn có @TravelingLetters.Count bức thư đã gửi tới tương lai và đang chờ đón bạn</MudText>
-                    @if (!ShowFuture)
-                    {
-                        <MudText Color="Color.Primary" Typo="Typo.caption">Chúng tôi giấu thông tin về những bức thư trong tương lai để bảo toàn sự bất ngờ cho bạn. Nếu bạn muốn thay đổi địa chỉ email hoặc xóa 1 bức thư, <span @onclick="() => { ShowFuture = !ShowFuture; }" style="text-decoration: underline; cursor: pointer;">hiển thị những bức thư tương lai</span></MudText>
-                    }
-                    else
-                    {
-                        <MudText Color="Color.Primary" Typo="Typo.caption">Lắng nghe những bức thư đang du hành đến tương lai của bạn. Bạn có thể cập nhật địa chỉ email nhận thư hoặc <span @onclick="() => { ShowFuture = !ShowFuture; }" style="text-decoration: underline; cursor: pointer;">giấu những bức thư tương lai</span></MudText>
-                    }
+    @if (DataLoading)
+    {
+        <MudContainer MaxWidth="MaxWidth.Large">
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+            <MudText Typo="Typo.h3" Style="text-align: center;">Đang tải...</MudText>
+        </MudContainer>
+    }
+    else
+    {
+        <div style="margin: 10ch auto; max-width: 83ch;">
+            <div>
+                <div class="d-flex">
+                    <MudIcon Style="margin-right: 1ch" Color="Color.Primary" Icon="@Icons.Material.Filled.AccessTime" />
+                    <MudText>Đang du hành thời gian (@TravelingLetters.Count thư)</MudText>
                 </div>
-                @if (ShowFuture)
+                @if (TravelingLetters.Count > 0)
                 {
-                    <MudTable Striped="true" Style="overflow-x: scroll;" Items="@TravelingLetters" Hover="true" SortLabel="Sort By">
+                    <div style="background: #F5F4FD; padding: 2ch; border-radius: 5px; margin: 2ch 0">
+                        <MudText Color="Color.Primary">Bạn có @TravelingLetters.Count bức thư đã gửi tới tương lai và đang chờ đón bạn</MudText>
+                        @if (!ShowFuture)
+                        {
+                            <MudText Color="Color.Primary" Typo="Typo.caption">Chúng tôi giấu thông tin về những bức thư trong tương lai để bảo toàn sự bất ngờ cho bạn. Nếu bạn muốn thay đổi địa chỉ email hoặc xóa 1 bức thư, <span @onclick="() => { ShowFuture = !ShowFuture; }" style="text-decoration: underline; cursor: pointer;">hiển thị những bức thư tương lai</span></MudText>
+                        }
+                        else
+                        {
+                            <MudText Color="Color.Primary" Typo="Typo.caption">Lắng nghe những bức thư đang du hành đến tương lai của bạn. Bạn có thể cập nhật địa chỉ email nhận thư hoặc <span @onclick="() => { ShowFuture = !ShowFuture; }" style="text-decoration: underline; cursor: pointer;">giấu những bức thư tương lai</span></MudText>
+                        }
+                    </div>
+                    @if (ShowFuture)
+                    {
+                        <MudTable Striped="true" Style="overflow-x: scroll;" Items="@TravelingLetters" Hover="true" SortLabel="Sort By">
+                            <HeaderContent>
+                                <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Title)">Tiêu đề</MudTableSortLabel></MudTh>
+                                <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DateCreate)">Ngày viết</MudTableSortLabel></MudTh>
+                                <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày nhận</MudTableSortLabel></MudTh>
+                                <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Email)">Tới</MudTableSortLabel></MudTh>
+                                <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.WordNum)">Số từ</MudTableSortLabel></MudTh>
+                                <MudTh></MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Tiêu đề"><MudLink Href="letters">@context.Title</MudLink></MudTd>
+                                <MudTd DataLabel="Ngày viết">@context.DateCreate.ToShortDateString()</MudTd>
+                                <MudTd DataLabel="Ngày nhận">@context.DeliverDate.Value.ToShortDateString()</MudTd>
+                                <MudTd DataLabel="Tới">@context.Email</MudTd>
+                                <MudTd DataLabel="Số từ">@context.WordNum</MudTd>
+                                <MudTd>
+                                    <div class="d-flex">
+                                        <MudIconButton @onclick="() => { PrivacyChange(context); }" Icon="@LetterPrivacyIcon(context)" />
+                                        <MudIconButton @onclick="() => { DeleteTravelingLetter(context); }" Style="margin-left: 0.5ch" Icon="@Icons.Material.Filled.Delete" />
+                                    </div>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    }
+                }
+                else
+                {
+                    <div style="background: #F5F4FD; padding: 2ch; border-radius: 5px; margin: 2ch 0">
+                        <MudText Color="Color.Primary">Bạn không có bức thư nào đang du hành. Hãy đi viết một bức nhé!</MudText>
+                    </div>
+                }
+            </div>
+            <div style="margin-top: 3ch; padding-bottom: 10ch;">
+                <div class="d-flex">
+                    <MudIcon Style="margin-right: 1ch" Color="Color.Success" Icon="@Icons.Material.Filled.Check" />
+                    <MudText>Đã nhận (@DeliveredLetters.Count thư)</MudText>
+                </div>
+                @if (DeliveredLetters.Count == 0)
+                {
+                    <div style="background: #fafafa; padding: 2ch; border-radius: 5px; margin: 2ch 0">
+                        <MudText>Bạn chưa nhận được bức thư nào. Nhưng khi những bức thư đến, bạn sẽ thấy chúng ở đây.</MudText>
+                    </div>
+                }
+                else
+                {
+                    <div style="background: #fafafa; padding: 2ch; border-radius: 5px; margin: 2ch 0">
+                        <MudText>Bạn đã nhận được @DeliveredLetters.Count bức thư du hàng từ quá khứ!</MudText>
+                    </div>
+                    <MudTable Striped="true" Style="overflow-x: scroll;" Items="@DeliveredLetters" Hover="true" SortLabel="Sort By">
                         <HeaderContent>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Title)">Tiêu đề</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DateCreate)">Ngày viết</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày nhận</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DateCreate)">Ngày viết</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày nhận</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Email)">Tới</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.WordNum)">Số từ</MudTableSortLabel></MudTh>
                             <MudTh></MudTh>
@@ -43,66 +101,20 @@
                             <MudTd DataLabel="Số từ">@context.WordNum</MudTd>
                             <MudTd>
                                 <div class="d-flex">
-                                    <MudIconButton @onclick="() => { PrivacyChange(context); }" Icon="@LetterPrivacyIcon(context)" />
-                                    <MudIconButton @onclick="() => { DeleteTravelingLetter(context); }" Style="margin-left: 0.5ch" Icon="@Icons.Material.Filled.Delete" />
+                                    <MudIconButton @onclick="async () => { await PrivacyChange(context); }" Icon="@LetterPrivacyIcon(context)" />
+                                    <MudIconButton @onclick="async () => { await DeleteDeliveredLetter(context); }" Style="margin-left: 0.5ch" Icon="@Icons.Material.Filled.Delete" />
                                 </div>
                             </MudTd>
                         </RowTemplate>
                     </MudTable>
                 }
-            }
-            else
-            {
-                <div style="background: #F5F4FD; padding: 2ch; border-radius: 5px; margin: 2ch 0">
-                    <MudText Color="Color.Primary">Bạn không có bức thư nào đang du hành. Hãy đi viết một bức nhé!</MudText>
-                </div>
-            }
-        </div>
-        <div style="margin-top: 3ch; padding-bottom: 10ch;">
-            <div class="d-flex">
-                <MudIcon Style="margin-right: 1ch" Color="Color.Success" Icon="@Icons.Material.Filled.Check" />
-                <MudText>Đã nhận (@DeliveredLetters.Count thư)</MudText>
             </div>
-            @if (DeliveredLetters.Count == 0)
-            {
-                <div style="background: #fafafa; padding: 2ch; border-radius: 5px; margin: 2ch 0">
-                    <MudText>Bạn chưa nhận được bức thư nào. Nhưng khi những bức thư đến, bạn sẽ thấy chúng ở đây.</MudText>
-                </div>
-            }
-            else
-            {
-                <div style="background: #fafafa; padding: 2ch; border-radius: 5px; margin: 2ch 0">
-                    <MudText>Bạn đã nhận được @DeliveredLetters.Count bức thư du hàng từ quá khứ!</MudText>
-                </div>
-                <MudTable Striped="true" Style="overflow-x: scroll;" Items="@DeliveredLetters" Hover="true" SortLabel="Sort By">
-                    <HeaderContent>
-                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Title)">Tiêu đề</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.DateCreate)">Ngày viết</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel Enabled="true" InitialDirection="SortDirection.Descending" SortBy="new Func<Letter, object>(s => s.DeliverDate)">Ngày nhận</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.Email)">Tới</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<Letter, object>(s => s.WordNum)">Số từ</MudTableSortLabel></MudTh>
-                        <MudTh></MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd DataLabel="Tiêu đề"><MudLink Href="letters">@context.Title</MudLink></MudTd>
-                        <MudTd DataLabel="Ngày viết">@context.DateCreate.ToShortDateString()</MudTd>
-                        <MudTd DataLabel="Ngày nhận">@context.DeliverDate.Value.ToShortDateString()</MudTd>
-                        <MudTd DataLabel="Tới">@context.Email</MudTd>
-                        <MudTd DataLabel="Số từ">@context.WordNum</MudTd>
-                        <MudTd>
-                            <div class="d-flex">
-                                <MudIconButton @onclick="() => { PrivacyChange(context); }" Icon="@LetterPrivacyIcon(context)" />
-                                <MudIconButton @onclick="() => { DeleteDeliveredLetter(context); }" Style="margin-left: 0.5ch" Icon="@Icons.Material.Filled.Delete" />
-                            </div>
-                        </MudTd>
-                    </RowTemplate>
-                </MudTable>
-            }
         </div>
-    </div>
+    }
 </MudContainer>
 
 @code {
+    bool DataLoading = true;
     static string email = "hieuld@gmail.com";
     static string[] PrivacyIcons = new string[3]
     {
@@ -116,11 +128,27 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var task1 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-delivered-letters-email/{Session.MyAccount.Email}");
-        var task2 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"get-traveling-letters-email/{Session.MyAccount.Email}");
-        await Task.WhenAll(task1, task2);
-        TravelingLetters = await task1;
-        DeliveredLetters = await task2;
+        if (!Session.Logged)
+        {
+            Session.Key = await localStorage.GetItemAsync<string>("FutureMeKey");
+            if (!string.IsNullOrWhiteSpace(Session.Key))
+            {
+                Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
+            }
+        }
+        DataLoading = false;
+        if (Session.Logged)
+        {
+            var task1 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-delivered-letters-email/{Session.MyAccount.Email}");
+            var task2 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"get-traveling-letters-email/{Session.MyAccount.Email}");
+            await Task.WhenAll(task1, task2);
+            TravelingLetters = await task1;
+            DeliveredLetters = await task2;
+        }
+        else
+        {
+            NavManager.NavigateTo("users/false");
+        }
     }
 
     private string LetterPrivacyIcon(Letter letter)
@@ -136,18 +164,24 @@
         }
     }
 
-    private void PrivacyChange(Letter letter)
+    private async Task PrivacyChange(Letter letter)
     {
         switch (letter.Privacy)
         {
             case (PrivacyMode.Private):
                 letter.Privacy = PrivacyMode.Anonymous;
+                StateHasChanged();
+                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
                 return;
             case (PrivacyMode.Anonymous):
                 letter.Privacy = PrivacyMode.Public;
+                StateHasChanged();
+                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
                 return;
             default:
                 letter.Privacy = PrivacyMode.Private;
+                StateHasChanged();
+                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
                 return;
         }
     }
