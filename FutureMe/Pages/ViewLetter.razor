@@ -87,7 +87,10 @@
                 var task2 = Http.UserClient.PutAsJsonAsync<string>($"api/Likes/delete-like-state/{MyLetter.Id}", Session.MyAccount.Email);
                 await Task.WhenAll(task1, task2);
             }
-            await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", MyLetter);
+            else
+            {
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", MyLetter);
+            }
         }
     }
 }

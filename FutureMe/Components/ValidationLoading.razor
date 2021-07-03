@@ -39,12 +39,19 @@
         {
             SuccessMessage = "Xác thực email thành công, thư của bạn đã được gửi!";
         }
-        var res = await Http.UserClient.GetStringAsync($"api/Emails/validate/{Key}");
-        if (res == "Xác thực email thành công")
+        try
         {
-            success = true;
+            var res = await Http.UserClient.GetStringAsync($"api/Emails/validate/{Key}");
+            if (res == "Xác thực email thành công")
+            {
+                success = true;
+            }
+            else
+            {
+                success = false;
+            }
         }
-        else
+        catch(Exception)
         {
             success = false;
         }

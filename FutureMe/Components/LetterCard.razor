@@ -2,23 +2,34 @@
 @inject SessionData Session
 
 <div class="letter-card">
-    <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
-    <div class="content">
-        <h4>@LetterItem.Title</h4>
-        <MudText Style="white-space: pre-line">
-            @DisplayContent
-        </MudText>
-    </div>
-    <MudText Style="color: #999" Typo="Typo.caption">@LetterItem.DateCreate.ToLongDateString() &#8594; @LetterItem.DeliverDate.Value.ToLongDateString() • @LetterItem.WordCount() word(s)</MudText>
-    <div class="d-flex justify-content-end">
-        <div>
-            <MudIconButton @onclick="LikesChanged" Icon="@LikeIcon" />
-            @LetterItem.Likes
+    @if (loading)
+    {
+        <MudSkeleton Width="30%" Height="60px;" />
+        <MudSkeleton Width="100%" />
+        <MudSkeleton Width="100%" />
+        <MudSkeleton Width="100%" />
+        <MudSkeleton Width="100%" />
+    }
+    else
+    {
+        <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
+        <div class="content">
+            <h4>@LetterItem.Title</h4>
+            <MudText Style="white-space: pre-line">
+                @DisplayContent
+            </MudText>
         </div>
-        <div style="margin-left: 2ch;">
-            <MudIconButton Icon="@FlagIcon" @onclick="() => { Flagged = !Flagged; }" />
+        <MudText Style="color: #999" Typo="Typo.caption">@LetterItem.DateCreate.ToLongDateString() &#8594; @LetterItem.DeliverDate.Value.ToLongDateString() • @LetterItem.WordCount() word(s)</MudText>
+        <div class="d-flex justify-content-end">
+            <div>
+                <MudIconButton @onclick="LikesChanged" Icon="@LikeIcon" />
+                @LetterItem.Likes
+            </div>
+            <div style="margin-left: 2ch;">
+                <MudIconButton Icon="@FlagIcon" @onclick="() => { Flagged = !Flagged; }" />
+            </div>
         </div>
-    </div>
+    }
 </div>
 
 @code {
@@ -37,6 +48,7 @@
     [Parameter]
     public EventCallback<Letter> LetterItemChanged { get; set; }
 
+    bool loading = true;
     bool Flagged = false;
     bool Liked = false;
     Letter _LetterItem;
@@ -52,6 +64,7 @@
         {
             Liked = await Http.UserClient.GetFromJsonAsync<bool>($"api/Likes/get-like-state/{Session.MyAccount.Email}/{LetterItem.Id}");
         }
+        loading = false;
     }
 
     private async Task LikesChanged()
@@ -80,7 +93,10 @@
                 var task2 = Http.UserClient.PutAsJsonAsync<string>($"api/Likes/delete-like-state/{LetterItem.Id}", Session.MyAccount.Email);
                 await Task.WhenAll(task1, task2);
             }
-            await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", LetterItem);
+            else
+            {
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", LetterItem);
+            }
         }
     }
 

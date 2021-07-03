@@ -142,8 +142,8 @@
             var task1 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-delivered-letters-email/{Session.MyAccount.Email}");
             var task2 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-traveling-letters-email/{Session.MyAccount.Email}");
             await Task.WhenAll(task1, task2);
-            TravelingLetters = await task1;
-            DeliveredLetters = await task2;
+            TravelingLetters = await task2;
+            DeliveredLetters = await task1;
         }
         else
         {
