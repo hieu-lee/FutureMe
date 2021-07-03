@@ -136,7 +136,6 @@
                 Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
             }
         }
-        DataLoading = false;
         if (Session.Logged)
         {
             var task1 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-delivered-letters-email/{Session.MyAccount.Email}");
@@ -149,6 +148,7 @@
         {
             NavManager.NavigateTo("users/false");
         }
+        DataLoading = false;
     }
 
     private string LetterPrivacyIcon(Letter letter)
