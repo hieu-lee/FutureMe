@@ -46,7 +46,7 @@
                                 <MudTh></MudTh>
                             </HeaderContent>
                             <RowTemplate>
-                                <MudTd DataLabel="Tiêu đề"><MudLink Href="letters">@context.Title</MudLink></MudTd>
+                                <MudTd DataLabel="Tiêu đề"><MudLink Href="@($"letters/{context.Id}")">@context.Title</MudLink></MudTd>
                                 <MudTd DataLabel="Ngày viết">@context.DateCreate.ToShortDateString()</MudTd>
                                 <MudTd DataLabel="Ngày nhận">@context.DeliverDate.Value.ToShortDateString()</MudTd>
                                 <MudTd DataLabel="Tới">@context.Email</MudTd>
@@ -94,7 +94,7 @@
                             <MudTh></MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="Tiêu đề"><MudLink Href="letters">@context.Title</MudLink></MudTd>
+                            <MudTd DataLabel="Tiêu đề"><MudLink Href="@($"letters/{context.Id}")">@context.Title</MudLink></MudTd>
                             <MudTd DataLabel="Ngày viết">@context.DateCreate.ToShortDateString()</MudTd>
                             <MudTd DataLabel="Ngày nhận">@context.DeliverDate.Value.ToShortDateString()</MudTd>
                             <MudTd DataLabel="Tới">@context.Email</MudTd>
@@ -140,7 +140,7 @@
         if (Session.Logged)
         {
             var task1 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-delivered-letters-email/{Session.MyAccount.Email}");
-            var task2 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"get-traveling-letters-email/{Session.MyAccount.Email}");
+            var task2 = Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Letter>>($"api/Letter/get-traveling-letters-email/{Session.MyAccount.Email}");
             await Task.WhenAll(task1, task2);
             TravelingLetters = await task1;
             DeliveredLetters = await task2;
@@ -171,17 +171,17 @@
             case (PrivacyMode.Private):
                 letter.Privacy = PrivacyMode.Anonymous;
                 StateHasChanged();
-                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
                 return;
             case (PrivacyMode.Anonymous):
                 letter.Privacy = PrivacyMode.Public;
                 StateHasChanged();
-                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
                 return;
             default:
                 letter.Privacy = PrivacyMode.Private;
                 StateHasChanged();
-                await Http.LetterAndFeedbackClient.PostAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync<Letter>("api/Letter/privacy-change", letter);
                 return;
         }
     }
@@ -189,14 +189,14 @@
     private async Task DeleteTravelingLetter(Letter letter)
     {
         TravelingLetters.Remove(letter);
-        await Http.LetterAndFeedbackClient.DeleteAsync($"delete-letter-by-id/{letter.Id}");
+        await Http.LetterAndFeedbackClient.DeleteAsync($"api/Letter/delete-letter-by-id/{letter.Id}");
         Snackbar.Add("Xóa thành công một bức thư", Severity.Success);
     }
 
     private async Task DeleteDeliveredLetter(Letter letter)
     {
         DeliveredLetters.Remove(letter);
-        await Http.LetterAndFeedbackClient.DeleteAsync($"delete-letter-by-id/{letter.Id}");
+        await Http.LetterAndFeedbackClient.DeleteAsync($"api/Letter/delete-letter-by-id/{letter.Id}");
         Snackbar.Add("Xóa thành công một bức thư", Severity.Success);
     }
 }

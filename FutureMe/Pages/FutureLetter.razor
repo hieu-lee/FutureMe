@@ -99,15 +99,15 @@
                     Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
                 }
             }
-            DataLoading = false;
             MyFutureLetter.OwnerUsername = (Session.Logged) ? Session.MyAccount.Username : string.Empty;
             MyFutureLetter.OwnerEmail = (Session.Logged) ? Session.MyAccount.Email : string.Empty;
             SetDeliverDate(YearsDelivery);
         }
         else
         {
-            MyFutureLetter = await Http.LetterAndFeedbackClient.GetFromJsonAsync<Letter>($"api/Letter/get-letrer/{Id}");
+            MyFutureLetter = await Http.LetterAndFeedbackClient.GetFromJsonAsync<Letter>($"api/Letter/get-letter-from-id/{Id}");
         }
+        DataLoading = false;
     }
 
     bool IsValidEmail(string email)

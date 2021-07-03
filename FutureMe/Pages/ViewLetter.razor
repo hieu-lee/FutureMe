@@ -8,13 +8,16 @@
             <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
             <div class="content">
                 <h4>Một bức thư từ @MyLetter.DateCreate.ToShortDateString()</h4>
-                <h5>
-                    @MyLetter.OwnerUsername
-                </h5>
+                @if (MyLetter.Privacy == PrivacyMode.Public)
+                {
+                    <h5>
+                        @MyLetter.OwnerUsername
+                    </h5>
+                }
                 <MudDivider DividerType="DividerType.FullWidth" />
-                <p style="margin-top: 1ch;">
+                <MudText Style="margin: 2ch 0; white-space: pre-line">
                     @MyLetter.Content
-                </p>
+                </MudText>
             </div>
             <MudText Style="color: #999" Typo="Typo.caption">@MyLetter.DateCreate.ToLongDateString() &#8594; @MyLetter.DeliverDate.Value.ToLongDateString() • @MyLetter.WordNum word(s)</MudText>
             <div class="d-flex justify-content-end">

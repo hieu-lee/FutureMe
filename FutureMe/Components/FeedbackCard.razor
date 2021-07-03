@@ -6,7 +6,7 @@
         <MudText Typo="Typo.subtitle1" Style="margin-left: 1ch;">@FeedbackItem.Username</MudText>
     </div>
     <div class="content" style="margin: 1ch 0;">
-        <MudText Typo="Typo.body1">@FeedbackItem.Content</MudText>
+        <MudText Style="white-space: pre-line" Typo="Typo.body1">@FeedbackItem.Content</MudText>
         <MudText Typo="Typo.caption">@FeedbackItem.PostTime.ToLocalTime()</MudText>
     </div>
     <hr/>
