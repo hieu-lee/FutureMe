@@ -10,7 +10,7 @@ namespace FutureMe
     {
         public HttpClient UserClient { get; init; } = new()
         {
-            BaseAddress = new Uri("https://localhost:44377")
+            BaseAddress = new Uri("https://futuremeuserapi.azurewebsites.net")
         };
 
         public HttpClient LetterAndFeedbackClient { get; init; } = new()

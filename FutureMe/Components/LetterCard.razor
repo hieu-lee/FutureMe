@@ -1,4 +1,5 @@
 ﻿@inject FutureMeClient Http
+@inject SessionData Session
 
 <div class="letter-card">
     <MudText Typo="Typo.subtitle2">THỜI GIAN DU HÀNH - @TravelledTime.Days NGÀY</MudText>
@@ -44,9 +45,13 @@
     string LikeIcon => Liked ? Icons.Material.Filled.Favorite : Icons.Material.Filled.FavoriteBorder;
     string FlagIcon => Flagged ? Icons.Material.Filled.Flag : Icons.Material.Filled.OutlinedFlag;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         DisplayContent = (LetterItem.Content.Length > 500) ? LetterItem.Content.Substring(0, 500) + "..." : LetterItem.Content;
+        if (Session.Logged)
+        {
+            Liked = await Http.UserClient.GetFromJsonAsync<bool>($"api/Likes/get-like-state/{Session.MyAccount.Email}/{LetterItem.Id}");
+        }
     }
 
     private async Task LikesChanged()
@@ -55,11 +60,26 @@
         if (Liked)
         {
             LetterItem.Likes++;
-            await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-increment-likes", LetterItem);
+            if (Session.Logged)
+            {
+                var task1 = Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-increment-likes", LetterItem);
+                var task2 = Http.UserClient.PutAsJsonAsync<string>($"api/Likes/add-like-state/{LetterItem.Id}", Session.MyAccount.Email);
+                await Task.WhenAll(task1, task2);
+            }
+            else
+            {
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-increment-likes", LetterItem);
+            }
         }
         else
         {
             LetterItem.Likes--;
+            if (Session.Logged)
+            {
+                var task1 = Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", LetterItem);
+                var task2 = Http.UserClient.PutAsJsonAsync<string>($"api/Likes/delete-like-state/{LetterItem.Id}", Session.MyAccount.Email);
+                await Task.WhenAll(task1, task2);
+            }
             await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", LetterItem);
         }
     }

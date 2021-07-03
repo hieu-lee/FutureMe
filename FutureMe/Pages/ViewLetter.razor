@@ -1,5 +1,6 @@
 ﻿@page "/read-letter/{Id}"
 @inject FutureMeClient Http
+@inject SessionData Session
 
 @if (!DataLoading)
 {
@@ -52,6 +53,10 @@
     protected override async Task OnInitializedAsync()
     {
         MyLetter = await Http.LetterAndFeedbackClient.GetFromJsonAsync<Letter>($"api/Letter/get-letter-from-id/{Id}");
+        if (Session.Logged)
+        {
+            Liked = await Http.UserClient.GetFromJsonAsync<bool>($"api/Likes/get-like-state/{Session.MyAccount.Email}/{MyLetter.Id}");
+        }
         TravelledTime = MyLetter.DeliverDate.Value - MyLetter.DateCreate;
         DataLoading = false;
     }
@@ -62,11 +67,26 @@
         if (Liked)
         {
             MyLetter.Likes++;
-            await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-increment-likes", MyLetter);
+            if (Session.Logged)
+            {
+                var task1 = Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-increment-likes", MyLetter);
+                var task2 = Http.UserClient.PutAsJsonAsync<string>($"api/Likes/add-like-state/{MyLetter.Id}", Session.MyAccount.Email);
+                await Task.WhenAll(task1, task2);
+            }
+            else
+            {
+                await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-increment-likes", MyLetter);
+            }
         }
         else
         {
             MyLetter.Likes--;
+            if (Session.Logged)
+            {
+                var task1 = Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", MyLetter);
+                var task2 = Http.UserClient.PutAsJsonAsync<string>($"api/Likes/delete-like-state/{MyLetter.Id}", Session.MyAccount.Email);
+                await Task.WhenAll(task1, task2);
+            }
             await Http.LetterAndFeedbackClient.PutAsJsonAsync("api/Letter/letter-decrement-likes", MyLetter);
         }
     }
