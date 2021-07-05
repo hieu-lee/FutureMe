@@ -58,7 +58,7 @@ else
                 Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
             }
         }
-        DataLoading = false;
         letters = await Http.LetterAndFeedbackClient.GetFromJsonAsync<List<Letter>>("api/Letter/get-public-delivered-letters");
+        DataLoading = false;
     }
 }
