@@ -101,6 +101,7 @@
             }
             MyFutureLetter.OwnerUsername = (Session.Logged) ? Session.MyAccount.Username : string.Empty;
             MyFutureLetter.OwnerEmail = (Session.Logged) ? Session.MyAccount.Email : string.Empty;
+            MyFutureLetter.Email = (Session.Logged) ? Session.MyAccount.Email : string.Empty;
             SetDeliverDate(YearsDelivery);
         }
         else

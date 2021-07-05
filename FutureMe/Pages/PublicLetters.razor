@@ -18,13 +18,24 @@ else
 {
     <div style="background: #f0f0f0">
         <MudContainer MaxWidth="MaxWidth.Large" Style="padding: 5ch;">
-            <ul style="list-style: none">
-                <Virtualize Items="letters" Context="letter">
-                    <li class="letter-card-holder" @onclick="@(() => { NavManager.NavigateTo($"read-letter/{letter.Id}"); })">
-                        <LetterCard @bind-LetterItem="letter" />
-                    </li>
-                </Virtualize>
-            </ul>
+            @if (letters.Any())
+            {
+                <ul style="list-style: none">
+                    <Virtualize Items="letters" Context="letter">
+                        <li class="letter-card-holder" @onclick="@(() => { NavManager.NavigateTo($"read-letter/{letter.Id}"); })">
+                            <LetterCard @bind-LetterItem="letter" />
+                        </li>
+                    </Virtualize>
+                </ul>
+            }
+            else
+                {
+                    <MudText Typo="Typo.h5">
+                        Hiện tại chưa bức thư công khai nào hoàn tất du hành thời gian <br />
+                        Các bạn hãy đợi những bức thư đầu tiên nhé!
+                    </MudText>
+                }
+
         </MudContainer>
     </div>
 }
@@ -48,6 +59,6 @@ else
             }
         }
         DataLoading = false;
-        letters = await Http.LetterAndFeedbackClient.GetFromJsonAsync<List<Letter>>("api/Letter/get-all-public-letters");
+        letters = await Http.LetterAndFeedbackClient.GetFromJsonAsync<List<Letter>>("api/Letter/get-public-delivered-letters");
     }
 }
