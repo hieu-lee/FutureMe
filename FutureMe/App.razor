@@ -28,8 +28,6 @@
             }
             catch (Exception)
             {
-                await localStorage.SetItemAsync<string>(SessionData.SessionKey, string.Empty);
-                Session.ClearData();
             }
         }
     }
