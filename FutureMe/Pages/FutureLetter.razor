@@ -93,7 +93,7 @@
         {
             if (!Session.Logged)
             {
-                Session.Key = await localStorage.GetItemAsync<string>("FutureMeKey");
+                Session.Key = await localStorage.GetItemAsync<string>(SessionData.SessionKey);
                 if (!string.IsNullOrWhiteSpace(Session.Key))
                 {
                     Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");

@@ -19,7 +19,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        Session.Key = await localStorage.GetItemAsync<string>("FutureMeKey");
+        Session.Key = await localStorage.GetItemAsync<string>(SessionData.SessionKey);
         if (!string.IsNullOrWhiteSpace(Session.Key))
         {
             try
@@ -28,7 +28,7 @@
             }
             catch (Exception)
             {
-                await localStorage.SetItemAsync<string>("FutureMeKey", string.Empty);
+                await localStorage.SetItemAsync<string>(SessionData.SessionKey, string.Empty);
                 Session.ClearData();
             }
         }

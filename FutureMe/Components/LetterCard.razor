@@ -1,5 +1,6 @@
 ﻿@inject FutureMeClient Http
 @inject SessionData Session
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <div class="letter-card">
     @if (loading)
@@ -60,6 +61,14 @@
     protected override async Task OnInitializedAsync()
     {
         DisplayContent = (LetterItem.Content.Length > 500) ? LetterItem.Content.Substring(0, 500) + "..." : LetterItem.Content;
+        if (!Session.Logged)
+        {
+            Session.Key = await localStorage.GetItemAsync<string>(SessionData.SessionKey);
+            if (!string.IsNullOrWhiteSpace(Session.Key))
+            {
+                Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
+            }
+        }
         if (Session.Logged)
         {
             Liked = await Http.UserClient.GetFromJsonAsync<bool>($"api/Likes/get-like-state/{Session.MyAccount.Email}/{LetterItem.Id}");

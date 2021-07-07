@@ -100,7 +100,7 @@ else
     {
         if (!Session.Logged)
         {
-            Session.Key = await localStorage.GetItemAsync<string>("FutureMeKey");
+            Session.Key = await localStorage.GetItemAsync<string>(SessionData.SessionKey);
             if (!string.IsNullOrWhiteSpace(Session.Key))
             {
                 Session.MyAccount = await Http.UserClient.GetFromJsonAsync<Account>($"api/Accounts/my-account/{Session.Key}");
@@ -119,7 +119,7 @@ else
             Session.Key = response.Item1;
             account.Username = response.Item2;
             Session.MyAccount = account;
-            await localStorage.SetItemAsync<string>("FutureMeKey", response.Item1);
+            await localStorage.SetItemAsync<string>(SessionData.SessionKey, response.Item1);
             Snackbar.Add("Đăng nhập thành công", Severity.Success);
         }
         else if (res.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -152,7 +152,7 @@ else
     private async Task SignOut()
     {
         var task1 = Http.UserClient.PostAsJsonAsync<Account>("api/Accounts/sign-out", Session.MyAccount);
-        var task2 = localStorage.SetItemAsync<string>("FutureMeKey", string.Empty);
+        var task2 = localStorage.SetItemAsync<string>(SessionData.SessionKey, string.Empty);
         Session.ClearData();
         await task2;
         await task1;
