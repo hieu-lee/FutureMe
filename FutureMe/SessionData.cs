@@ -11,7 +11,7 @@ namespace FutureMe
 {
     public class SessionData
     {
-        public static string SessionKey = "FutureMeUserSessionKey";
+        public static string SessionKey = "FutureMeClientUserSessionKey";
         public Account MyAccount { get; set; }
         public string Key { get; set; }
         public bool Logged => (MyAccount is not null);
