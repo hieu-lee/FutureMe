@@ -185,7 +185,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-qirR+ue\/hdbA21HGtxn+w+dTCZ+7BVAL+ymDCDUUSjY=",
+      "hash": "sha256-I75bbzD\/hJjWaaI7u2TQ8W+hmhamPM5FBCZkg07doQc=",
       "url": "_framework\/FutureMe.dll"
     },
     {
@@ -301,7 +301,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-zJ2f7ply7cDgm45HDdz\/VgFeFLiQlxjNqakTK5cu3N0=",
+      "hash": "sha256-d92aQVbbEQ5qFPPu+tY+LDt+oPv2W5adYHIXIsFQ1Ro=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -309,5 +309,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "WAojStGa"
+  "version": "JLIe\/E25"
 };
