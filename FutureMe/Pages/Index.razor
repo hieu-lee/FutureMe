@@ -63,12 +63,20 @@
             <MudDivider DividerType="DividerType.Middle" />
         </div>
         <div>
-            @for (int i = 0; i < feedbacks.Count; i++)
-            {
-                <div style="margin: 3ch 0;">
-                    <FeedbackCard @bind-FeedbackItem="feedbacks[i]" />
-                </div>
-            }
+            <ul style="list-style: none">
+                @if (loading)
+                {
+                    <li style="margin: 3ch 0;">
+                        <LoadingFeedback/>
+                    </li>
+                }
+                @for (int i = 0; i < feedbacks.Count; i++)
+                {
+                    <li style="margin: 3ch 0;">
+                        <FeedbackCard @bind-FeedbackItem="feedbacks[i]" />
+                    </li>
+                }
+            </ul>
             <div class="d-flex justify-content-center">
                 <MudButton OnClick="@(() => { NavManager.NavigateTo("feedbacks"); })" Style="background: #ffffff; color: #7467EF; margin: 0 auto;">Đọc thêm đánh giá về FutureMe</MudButton>
             </div>
@@ -109,10 +117,12 @@
 </div>
 
 @code {
-    List<Feedback> feedbacks = new();
+    List<Feedback> feedbacks;
+    bool loading = true;
 
     protected override async Task OnInitializedAsync()
     {
         feedbacks = await Http.LetterAndFeedbackClient.GetFromJsonAsync<List<Feedback>>("api/Feedback/get-top-feedbacks");
+        loading = false;
     }
 }
