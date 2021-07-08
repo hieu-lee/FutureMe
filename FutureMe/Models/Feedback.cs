@@ -17,5 +17,16 @@ namespace FutureMe.Models
         public int Likes { get; set; } = 0;
         [Required(ErrorMessage = "Hãy đánh giá dịch vụ của FutureMe")]
         public int Rate { get; set; } = 5;
+
+        public override bool Equals(object obj)
+        {
+            var other = (Feedback)obj;
+            return Id.Equals(other.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

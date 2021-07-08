@@ -1,0 +1,55 @@
+﻿@page "/feedbacks"
+@inject FutureMeClient Http
+
+<div style="background: #7467EF; color: #ffffff">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        @if (loading)
+        {
+            <ul style="list-style:none; margin: 5ch 0;">
+                @for (int i = 0; i < 10; i++)
+                {
+                    <li style="margin: 3ch 0;">
+                        <MudCard Style="max-width: 60ch; padding: 2ch; margin: 0 auto;">
+                            <MudCardHeader>
+                                <CardHeaderAvatar>
+                                    <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="40px" Width="40px" />
+                                </CardHeaderAvatar>
+                                <CardHeaderContent>
+                                    <MudSkeleton Animation="Animation.Wave" Width="60%" />
+                                </CardHeaderContent>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudSkeleton Animation="Animation.Wave" />
+                                <MudSkeleton Animation="Animation.Wave" />
+                                <MudSkeleton Animation="Animation.Wave" />
+                                <MudSkeleton Animation="Animation.Wave" />
+                            </MudCardContent>
+                        </MudCard>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <ul style="list-style: none; margin: 5ch 0;">
+                <Virtualize Items="feedbacks" Context="feedback">
+                    <li style="margin: 3ch 0;">
+                        <FeedbackCard @bind-FeedbackItem="feedback" />
+                    </li>
+                </Virtualize>
+            </ul>
+        }
+    </MudContainer>
+</div>
+
+
+@code {
+    bool loading = true;
+    HashSet<Feedback> feedbacks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        feedbacks = await Http.LetterAndFeedbackClient.GetFromJsonAsync<HashSet<Feedback>>("api/Feedback/get-all-feedbacks");
+        loading = false;
+    }
+}
