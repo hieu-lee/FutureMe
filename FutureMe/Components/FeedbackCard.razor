@@ -2,16 +2,19 @@
 
 <MudCard Style="max-width: 60ch; padding: 2ch; margin: 0 auto;">
     <div class="header" style="display: flex">
-        <MudAvatar Color="Color.Primary">@FirstLetter</MudAvatar>
-        <MudText Typo="Typo.subtitle1" Style="margin-left: 1ch;">@FeedbackItem.Username</MudText>
+        <MudAvatar Style="width: 43px; height: 43px" Color="Color.Primary">@FirstLetter</MudAvatar>
+        <div style="margin-left: 1ch;">
+            <MudText Typo="Typo.subtitle2">@FeedbackItem.Username</MudText>
+            <MudRating Size="Size.Small" SelectedValue="FeedbackItem.Rate" MaxValue="5" DisableRipple="true" ReadOnly="true"/>
+        </div>
     </div>
     <div class="content" style="margin: 1ch 0;">
         <MudText Style="white-space: pre-line" Typo="Typo.body1">@FeedbackItem.Content</MudText>
         <MudText Typo="Typo.caption">@FeedbackItem.PostTime.ToLocalTime()</MudText>
     </div>
-    <hr/>
+    <hr />
     <div class="likes d-flex">
-        <MudIconButton Icon="@LikeIcon" @onclick="LikesChanged"/>
+        <MudIconButton Icon="@LikeIcon" @onclick="LikesChanged" />
         <div class="d-flex align-items-center">
             <MudText Style="margin-left: 0.5ch;" Typo="Typo.subtitle2">@FeedbackItem.Likes</MudText>
         </div>
