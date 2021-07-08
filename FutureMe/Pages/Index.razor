@@ -66,15 +66,21 @@
             <ul style="list-style: none">
                 @if (loading)
                 {
-                    <li style="margin: 3ch 0;">
-                        <LoadingFeedback/>
-                    </li>
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        <li style="margin: 3ch 0;">
+                            <LoadingFeedback />
+                        </li>
+                    }
                 }
-                @for (int i = 0; i < feedbacks.Count; i++)
+                else
                 {
-                    <li style="margin: 3ch 0;">
-                        <FeedbackCard @bind-FeedbackItem="feedbacks[i]" />
-                    </li>
+                    @for (int i = 0; i < feedbacks.Count; i++)
+                    {
+                        <li style="margin: 3ch 0;">
+                            <FeedbackCard @bind-FeedbackItem="feedbacks[i]" />
+                        </li>
+                    }
                 }
             </ul>
             <div class="d-flex justify-content-center">
