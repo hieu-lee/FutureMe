@@ -150,7 +150,7 @@
             string m = "Gửi thư thành công!";
             if (!Session.Logged || MyFutureLetter.Email != Session.MyAccount.Email)
             {
-                m += " Hãy xác thực email của bạn.";
+                m += " Hãy xác thực email của bạn. (Hiện tại chức năng xác thực chưa hoạt động, thư của bạn đã được gửi)";
             }
             Snackbar.Add(m, Severity.Success);
         }
