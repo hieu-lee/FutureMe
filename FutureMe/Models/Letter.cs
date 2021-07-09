@@ -23,7 +23,7 @@ namespace FutureMe.Models
         public bool Delivered { get; set; } = false;
         public string OwnerUsername { get; set; }
         public string OwnerEmail { get; set; }
-        public DateTime DateCreate { get; init; } = DateTime.Now.Date;
+        public DateTime DateCreate { get; init; }
         public int Likes { get; set; } = 0;
         public int WordNum { get; set; } = 0;
         public int WordCount()

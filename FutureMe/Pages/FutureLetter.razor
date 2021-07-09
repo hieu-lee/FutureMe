@@ -81,7 +81,7 @@
     public string Id { get; set; }
     bool loading = false;
     bool DataLoading = true;
-    Letter MyFutureLetter = new() { Title = $"Một bức thư từ {DateTime.Now.ToShortDateString()}", Content = "Gửi tôi trong tương lai,\n" };
+    Letter MyFutureLetter = new() { Title = $"Một bức thư từ {DateTime.Now.ToShortDateString()}", Content = "Gửi tôi trong tương lai,\n", DateCreate = DateTime.Now.Date };
     bool TitleEditing = false;
     string EditIcon => (TitleEditing) ? Icons.Material.Filled.EditOff : Icons.Material.Filled.Edit;
     int YearsDelivery = 1;
